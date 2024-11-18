@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/lunch
+    username: root
+    password: gosemvhs1!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+jwt:
+  secret_key: lunchProjectSecretkeypleaserightworkingJwtprojectiwishyouplese
+
+
+logging.level.web: DEBUG
