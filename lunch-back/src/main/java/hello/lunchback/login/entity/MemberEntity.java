@@ -2,6 +2,7 @@ package hello.lunchback.login.entity;
 
 import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
+import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class MemberEntity {
             inverseJoinColumns = @JoinColumn(name = "roleId")
     )
     private List<RoleEntity> roles = new ArrayList<>();
+    @OneToOne(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
+    private StoreEntity store;
 
     public void createMember(PostJoinRequestDto dto, String encodePassword) {
         this.memberName = dto.getName();

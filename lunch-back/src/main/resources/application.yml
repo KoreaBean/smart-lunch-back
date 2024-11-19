@@ -14,9 +14,17 @@ spring:
   sql:
     init:
       mode: always
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
 
 jwt:
   secret_key: lunchProjectSecretkeypleaserightworkingJwtprojectiwishyouplese
 
 
 logging.level.web: DEBUG
+
+file:
+  filePath: /Users/sanggyun/Documents/GitHub/smart-lunch-back/lunch-back/src/main/java/hello/lunchback/file/
+  fileUrl: http://localhost:8080/file/

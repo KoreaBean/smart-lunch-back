@@ -34,7 +34,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plus(1,ChronoUnit.HOURS)))
+                .setExpiration(Date.from(Instant.now().plus(1,ChronoUnit.DAYS)))
                 .signWith(SignatureAlgorithm.HS256,secretKey)
                 .compact();
 
@@ -57,7 +57,7 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
             String email = claims.getSubject();
-            List<String> roles = claims.get("roles", List.class);
+            List<String> roles = claims.get("Roles", List.class);
             list.put("email",email);
             list.put("roles",roles);
         }catch (Exception e){

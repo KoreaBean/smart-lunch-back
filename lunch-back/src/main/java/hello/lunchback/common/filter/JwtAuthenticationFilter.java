@@ -35,6 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("JwtAuthenticationFilter : doFilterInternal : Start");
         try {
             String token = parseBearToken(request);
+            log.info("token : {}",token);
             if (token == null){
                 filterChain.doFilter(request,response);
                 return;
@@ -71,6 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
         String token = authorization.substring(7);
+        log.info("parser Token : {}",token);
         return token;
 
     }

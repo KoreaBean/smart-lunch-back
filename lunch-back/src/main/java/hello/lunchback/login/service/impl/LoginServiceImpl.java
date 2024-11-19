@@ -60,6 +60,7 @@ public class LoginServiceImpl implements LoginService {
             UserDetails principal = (UserDetails) authenticate.getPrincipal();
             // JWT 생성
             token = jwtProvider.create(principal);
+            log.info("create Token : {}",token);
         }catch (UsernameNotFoundException e) {
             log.info("LoginServiceImpl : login : error : UsernameNotFoundException");
             return PostLoginResponseDto.notExistedUser();
@@ -93,6 +94,8 @@ public class LoginServiceImpl implements LoginService {
             member.addRole(role);
             memberRepository.save(member);
         }catch (Exception e) {
+            log.info("LoginServiceImpl : join : error ={}");
+            e.printStackTrace();
             return PostJoinResponseDto.databaseError();
         }
         // 2. password 암호화
