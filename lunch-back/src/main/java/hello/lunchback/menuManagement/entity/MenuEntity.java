@@ -1,8 +1,10 @@
 package hello.lunchback.menuManagement.entity;
 
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
+import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Interceptor;
@@ -10,6 +12,7 @@ import org.hibernate.Interceptor;
 @Entity(name = "menu")
 @NoArgsConstructor
 @Setter
+@Getter
 public class MenuEntity {
 
     @Id
@@ -35,4 +38,10 @@ public class MenuEntity {
         this.store = storeEntity;
     }
 
+    public void update(PostMenuUpdateRequestDto dto) {
+        this.menuName = dto.getMenuName();
+        this.menuDescription = dto.getMenuDescription();
+        this.menuPrice = dto.getMenuPrice();
+        this.nutrients = dto.getNutrients();
+    }
 }

@@ -105,7 +105,6 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private Boolean duplicatedEmail(PostJoinRequestDto dto) {
-
         Optional<MemberEntity> memberEntity = memberRepository.findByMemberEmail(dto.getEmail());
         if (memberEntity.isEmpty()){
             return false;

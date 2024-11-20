@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     defer-datasource-initialization: true
 
@@ -27,4 +27,5 @@ logging.level.web: DEBUG
 
 file:
   filePath: /Users/sanggyun/Documents/GitHub/smart-lunch-back/lunch-back/src/main/java/hello/lunchback/file/
-  fileUrl: http://localhost:8080/file/
+  fileUrl: http://localhost:8080/image/
+
