@@ -6,6 +6,7 @@ import hello.lunchback.orderManagement.entity.OrderEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class StoreEntity {
     private String storeDescription;
     private String storeImage;
     @OneToOne
+    @ToString.Exclude
     private MemberEntity member;
     @OneToMany(mappedBy = "store",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<MenuEntity> menuList = new ArrayList<>();

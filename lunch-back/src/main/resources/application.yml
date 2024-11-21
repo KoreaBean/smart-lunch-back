@@ -29,3 +29,8 @@ file:
   filePath: /Users/sanggyun/Documents/GitHub/smart-lunch-back/lunch-back/src/main/java/hello/lunchback/file/
   fileUrl: http://localhost:8080/image/
 
+kakaopay:
+  client_id: 495991519813E5C75502
+  client_secret: F64956B0C80DAF856770
+  secret_key: F64956B0C80DAF856770
+  secret_key_dev: DEV278FC6A197DD5A89664291D5BDC43B847776C

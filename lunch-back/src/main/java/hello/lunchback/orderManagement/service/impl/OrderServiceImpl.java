@@ -1,14 +1,19 @@
 package hello.lunchback.orderManagement.service.impl;
 
 import hello.lunchback.common.response.ResponseDto;
+import hello.lunchback.external.kakaoPay.KakaoService;
+import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
+import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
+import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDto;
 import hello.lunchback.orderManagement.dto.response.OrderHistoryItem;
 import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.orderManagement.repository.OrderRepository;
 import hello.lunchback.orderManagement.service.OrderService;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
@@ -26,6 +31,8 @@ public class OrderServiceImpl implements OrderService {
 
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
+    private final KakaoService kakaoService;
+    private final OrderRepository orderRepository;
 
     // 주문 내역 조회
     @Override
@@ -52,9 +59,10 @@ public class OrderServiceImpl implements OrderService {
     // 주문하기
     @Override
     @Transactional
-    public PostOrderResponseDto order(Integer storeId, String email, PostOrderRequestDto dto) {
+    public KakaopayResponseDto order(Integer storeId, String email, PostOrderRequestDto dto) {
         MemberEntity member = new MemberEntity();
         StoreEntity store = new StoreEntity();
+        KakaopayResponseDto kakaopayResponseDto = new KakaopayResponseDto();
         try {
             // 멤버 조회 하고
             member = memberRepository.findByMemberEmail(email)
@@ -64,18 +72,42 @@ public class OrderServiceImpl implements OrderService {
             }
             store = storeRepository.findByStoreId(storeId)
                     .orElse(null);
-            member.getOrderList().add(new OrderEntity(store,dto,member));
+            OrderEntity orderEntity = new OrderEntity(store, dto, member);
+            orderRepository.save(orderEntity);
+            member.getOrderList().add(orderEntity);
             // new order 만들고
             // orderDetail 만들고
             // 카카오페이 결제 연결 하고
             // ok 떨어지면 결제 승인 -> 완료
             // -> 가게 알람
             // -> 사용자 알람
+            StringBuilder sb = new StringBuilder();
+            Integer quantity = 0;
+            for (MenuListItem menuListItem : dto.getList()) {
+                    sb.append(menuListItem.getMenuName());
+                    quantity = quantity + menuListItem.getQuantity();
+            }
+
+
+            KakaopayRequestDto kakaopayRequestDto = KakaopayRequestDto.builder()
+                    .cid("TC0ONETIME")
+                    .partner_order_id(String.valueOf(orderEntity.getOrderId()))
+                    .partner_user_id(String.valueOf(member.getMemberId()))
+                    .item_name(sb.toString())
+                    .quantity(quantity)
+                    .total_amount(dto.getTotalPrice())
+                    .tax_free_amount(0)
+                    .approval_url("http://localhost:8080/kakaopay/payment/success")
+                    .fail_url("http://localhost:8080/kakaopay/payment/fail")
+                    .cancel_url("http://localhost:8080/kakaopay/payment/cancel")
+                    .build();
+            kakaopayResponseDto = kakaoService.requestPayment(kakaopayRequestDto);
+            orderEntity.setPay(true);
+            orderRepository.save(orderEntity);
         }catch (Exception e){
             e.printStackTrace();
-            return PostOrderResponseDto.databaseErr();
         }
-        return PostOrderResponseDto.success();
+        return kakaopayResponseDto;
     }
 
     private OrderHistoryItem mappingData(OrderEntity order) {

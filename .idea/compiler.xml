@@ -12,7 +12,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="demo" target="17" />
-      <module name="lunch-back" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

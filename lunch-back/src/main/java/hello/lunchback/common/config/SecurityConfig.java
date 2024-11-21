@@ -45,7 +45,7 @@ public class SecurityConfig{
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/logout","/join","/image/**").permitAll()
+                        .requestMatchers("/login","/logout","/join","/image/**","/kakaopay/payment/**").permitAll()
                         .anyRequest().authenticated())
                 //.exceptionHandling(error -> error.authenticationEntryPoint(new FaildAuthenticationEntryPoint()))
                 .addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter.class)

@@ -7,6 +7,7 @@ import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -24,12 +25,16 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderId;
     @ManyToOne
+    @ToString.Exclude
     private MemberEntity member;
     @ManyToOne
+    @ToString.Exclude
     private StoreEntity store;
     @OneToMany(mappedBy = "order", orphanRemoval = true,cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<OrderDetailEntity> orderDetail = new ArrayList<>();
     private String orderDate;
+    private boolean isPay = false;
 
     public OrderEntity(StoreEntity store, PostOrderRequestDto dto,MemberEntity member) {
         this.store = store;
