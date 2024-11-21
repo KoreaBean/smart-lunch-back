@@ -2,6 +2,7 @@ package hello.lunchback.login.entity;
 
 import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
+import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +35,10 @@ public class MemberEntity {
     private List<RoleEntity> roles = new ArrayList<>();
     @OneToOne(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
     private StoreEntity store;
+
+    // 주문접수
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderEntity> orderList = new ArrayList<>();
 
     public void createMember(PostJoinRequestDto dto, String encodePassword) {
         this.memberName = dto.getName();

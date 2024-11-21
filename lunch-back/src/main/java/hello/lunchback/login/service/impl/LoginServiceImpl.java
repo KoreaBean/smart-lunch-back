@@ -87,7 +87,7 @@ public class LoginServiceImpl implements LoginService {
                 log.info("LoginServiceImpl : join : isDuplicated : True");
                 return PostJoinResponseDto.notExisted("이미 존재하는 email 입니다.");
             }
-             role = roleRepository.findByRoleName(RoleType.ROLE_consumer.toString());
+             role = roleRepository.findByRoleName(RoleType.consumer.toString());
 
             String encodePassword = passwordEncoder.passwordEncoder().encode(dto.getPassword());
             member.createMember(dto,encodePassword);

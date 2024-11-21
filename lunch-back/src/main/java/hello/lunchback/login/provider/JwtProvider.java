@@ -28,7 +28,7 @@ public class JwtProvider {
 
         //클레임 생성
         Claims claims = Jwts.claims().setSubject(user.getUsername());
-        claims.put("Roles",roles);
+        claims.put("Authorities",roles);
 
 
         return Jwts.builder()
@@ -57,9 +57,9 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
             String email = claims.getSubject();
-            List<String> roles = claims.get("Roles", List.class);
+            List<String> roles = claims.get("Authorities", List.class);
             list.put("email",email);
-            list.put("roles",roles);
+            list.put("Authorities",roles);
         }catch (Exception e){
             e.printStackTrace();
         }

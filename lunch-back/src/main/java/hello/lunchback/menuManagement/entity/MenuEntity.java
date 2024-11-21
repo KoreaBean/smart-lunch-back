@@ -2,6 +2,7 @@ package hello.lunchback.menuManagement.entity;
 
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
 import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
+import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             Map<String, Object> validate = jwtProvider.validate(token);
-            List<String> roles = (List<String>) validate.get("roles");
+            List<String> roles = (List<String>) validate.get("Authorities");
             List<SimpleGrantedAuthority> list = roles.stream()
                     .map(role -> new SimpleGrantedAuthority(role))
                     .toList();
