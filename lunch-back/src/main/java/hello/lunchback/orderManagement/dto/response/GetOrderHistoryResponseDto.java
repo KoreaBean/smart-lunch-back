@@ -1,14 +1,18 @@
 package hello.lunchback.orderManagement.dto.response;
 
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
+@Data
 public class GetOrderHistoryResponseDto {
 
     private String code;
-    private List<OrderHistoryItem> item;
+    private List<OrderHistoryItem> item = new ArrayList<>();
     // 주문 날짜, 가게 사진, 가게명, 메뉴, 총 가격
 
 

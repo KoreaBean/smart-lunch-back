@@ -7,9 +7,9 @@
 #                       (2, '식당','restaurant'),
 #                       (3,'소비자','consumer');
 
-# # insert into member_roles values
-# #                              (1,1);
-#
+insert into member_roles values
+                             (2,2);
+
 -- store 데이터 삽입
 #
 # insert into store values (1,'123','테스트 가게','테스트 이미지','테스트 가게','1')

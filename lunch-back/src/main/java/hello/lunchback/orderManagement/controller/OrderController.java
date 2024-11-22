@@ -3,12 +3,14 @@ package hello.lunchback.orderManagement.controller;
 import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
+import hello.lunchback.orderManagement.dto.response.GetOrderHistoryDetailResponseDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDto;
 import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
 import hello.lunchback.orderManagement.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,14 +28,25 @@ public class OrderController {
     // 주문 정보 저장
 
     // 주문 내역 조회
-    @PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
+    //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
     @GetMapping("/order/history")
     public GetOrderHistoryResponseDto getOrderHistoryList(@AuthenticationPrincipal String email){
-        orderService.orderHistory(email);
-        return null;
+        GetOrderHistoryResponseDto result = orderService.orderHistory(email);
+        return result;
     }
 
+    // 주문 상세 내역 조회
     // 대기 및 혼잡도 계산
+    //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
+    @GetMapping("/order/history/{orderId}")
+    public GetOrderHistoryDetailResponseDto orderHistoryDetail(@PathVariable(name = "orderId")String orderId,
+                                                               @AuthenticationPrincipal String email){
+        GetOrderHistoryDetailResponseDto result = orderService.orderHistoryDetail(Integer.valueOf(orderId), email);
+        return result;
+    }
+
+    // git
+
 
     // 주문 하기
     //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")

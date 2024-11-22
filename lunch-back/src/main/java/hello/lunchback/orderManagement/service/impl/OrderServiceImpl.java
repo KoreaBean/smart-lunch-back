@@ -8,26 +8,27 @@ import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
-import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDto;
-import hello.lunchback.orderManagement.dto.response.OrderHistoryItem;
-import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
+import hello.lunchback.orderManagement.dto.response.*;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.orderManagement.repository.OrderRepository;
 import hello.lunchback.orderManagement.service.OrderService;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
+import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+
+    private final WaitingManager waitingManager;
+
 
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
@@ -104,14 +105,68 @@ public class OrderServiceImpl implements OrderService {
             kakaopayResponseDto = kakaoService.requestPayment(kakaopayRequestDto);
             orderEntity.setPay(true);
             orderRepository.save(orderEntity);
+            waitingManager.add(storeId,orderEntity.getOrderId());
         }catch (Exception e){
             e.printStackTrace();
         }
         return kakaopayResponseDto;
     }
 
+    // 주문 상세 정보 조회
+    @Override
+    public GetOrderHistoryDetailResponseDto orderHistoryDetail(Integer orderId, String email) {
+
+        MemberEntity member = memberRepository.findByMemberEmail(email)
+                .orElse(null);
+
+        OrderEntity order = getOrder(orderId, member);
+        Integer myWait = waitingManager.findUser(order.getStore().getStoreId(), orderId);
+        String busy = isBusy(order);
+        String predict = predictTime(myWait);
+
+        List<GetOrderHistoryDetailItem> list = new ArrayList<>();
+        Integer totalPrice = 0;
+        for (OrderDetailEntity orderDetailEntity : order.getOrderDetail()) {
+            GetOrderHistoryDetailItem result = new GetOrderHistoryDetailItem(orderDetailEntity.getMenuName(), orderDetailEntity.getMenuPrice(), orderDetailEntity.getQuantity());
+            totalPrice =+ result.getTotalPrice();
+            list.add(result);
+        }
+
+
+        return GetOrderHistoryDetailResponseDto.success(order,list,totalPrice,busy,myWait,predict);
+    }
+
+    private String predictTime(Integer myWait) {
+        if (myWait <= 3){
+            return "30";
+        }
+        if (myWait > 3 && myWait <= 10){
+            return "60";
+        }
+        return "60분 이상";
+    }
+
+    private String isBusy(OrderEntity order) {
+        Integer busy = waitingManager.busy(order.getStore().getStoreId());
+        if (busy <= 5){
+            return "쾌적";
+        }
+        if (busy >5 && busy <= 10){
+            return "보통";
+        }
+        return "혼잡";
+    }
+
+    private OrderEntity getOrder(Integer orderId, MemberEntity member) {
+        return member.getOrderList().stream()
+                .filter(order -> orderId.equals(orderId))
+                .findFirst()
+                .orElse(null);
+    }
+
     private OrderHistoryItem mappingData(OrderEntity order) {
         OrderHistoryItem item = new OrderHistoryItem();
+        item.setOrderId(order.getOrderId());
         item.setOrderDate(order.getOrderDate());
         item.setStoreImage(order.getStore().getStoreImage());
         item.setStoreName(order.getStore().getStoreName());

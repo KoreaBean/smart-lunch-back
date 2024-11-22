@@ -31,7 +31,6 @@ public class OrderEntity {
     @ToString.Exclude
     private StoreEntity store;
     @OneToMany(mappedBy = "order", orphanRemoval = true,cascade = CascadeType.ALL)
-    @ToString.Exclude
     private List<OrderDetailEntity> orderDetail = new ArrayList<>();
     private String orderDate;
     private boolean isPay = false;
