@@ -6,11 +6,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class PostMenuAddRequestDto {
 
-    private Integer storeId;
-    private String menuName;
-    private String menuDescription;
-    private Integer menuPrice;
-    private MultipartFile menuImage;
+    private String name;
+    private String description;
+    private Integer price;
+    private MultipartFile menuImg;
+    private Integer calorie;
+    private Integer carbs;
+    private Integer protein;
+    private Integer fat;
+
 
 
 }

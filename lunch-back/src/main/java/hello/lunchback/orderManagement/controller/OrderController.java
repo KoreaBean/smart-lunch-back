@@ -29,7 +29,7 @@ public class OrderController {
 
     // 주문 내역 조회
     //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
-    @GetMapping("/order/history")
+    @GetMapping(value = "/order/history", produces = MediaType.APPLICATION_JSON_VALUE)
     public GetOrderHistoryResponseDto getOrderHistoryList(@AuthenticationPrincipal String email){
         GetOrderHistoryResponseDto result = orderService.orderHistory(email);
         return result;
@@ -38,7 +38,7 @@ public class OrderController {
     // 주문 상세 내역 조회
     // 대기 및 혼잡도 계산
     //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
-    @GetMapping("/order/history/{orderId}")
+    @GetMapping(value = "/order/history/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GetOrderHistoryDetailResponseDto orderHistoryDetail(@PathVariable(name = "orderId")String orderId,
                                                                @AuthenticationPrincipal String email){
         GetOrderHistoryDetailResponseDto result = orderService.orderHistoryDetail(Integer.valueOf(orderId), email);

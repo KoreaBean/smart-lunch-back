@@ -14,13 +14,13 @@ import java.net.MalformedURLException;
 public interface MenuService {
 
 
-    ResponseEntity<? super PostMenuAddResponseDto> add(PostMenuAddRequestDto dto);
+    PostMenuAddResponseDto add(PostMenuAddRequestDto dto, String email);
 
-    ResponseEntity<? super GetStoreMenuListResponseDto> menuList(Integer storeId) throws MalformedURLException;
+    GetStoreMenuListResponseDto menuList(String email) throws MalformedURLException;
 
     String getImage(String fileName);
 
-    ResponseEntity<? super PutStoreMenuDelete> delete(Integer storeId, Integer menuId);
+    PutStoreMenuDelete delete(String email, Integer menuId);
 
-    ResponseEntity<? super PostMenuUpdateResponseDto> menuUpdate(Integer storeId, Integer menuId, PostMenuUpdateRequestDto dto);
+    PostMenuUpdateResponseDto menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto);
 }

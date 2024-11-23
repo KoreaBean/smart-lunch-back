@@ -6,6 +6,7 @@ import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "order_detail")
 @Data
@@ -16,6 +17,7 @@ public class OrderDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderDetailId;
     @ManyToOne
+    @ToString.Exclude
     private OrderEntity order;
     private String menuName;
     private Integer menuPrice;

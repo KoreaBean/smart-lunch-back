@@ -8,6 +8,7 @@ import hello.lunchback.login.service.LoginService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,16 +27,16 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping("/login")
-    public ResponseEntity<? super PostLoginResponseDto> login(@RequestBody PostLoginRequestDto dto){
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostLoginResponseDto login(@RequestBody PostLoginRequestDto dto){
 
-        ResponseEntity<? super PostLoginResponseDto> login = loginService.login(dto);
+        PostLoginResponseDto login = loginService.login(dto);
         return login;
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<? super PostJoinResponseDto> join(@RequestBody PostJoinRequestDto dto){
-        ResponseEntity<? super PostJoinResponseDto> join = loginService.join(dto);
+    @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostJoinResponseDto join(@RequestBody PostJoinRequestDto dto){
+        PostJoinResponseDto join = loginService.join(dto);
         return join;
     }
 }

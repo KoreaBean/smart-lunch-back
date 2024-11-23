@@ -1,5 +1,7 @@
 package hello.lunchback.menuManagement.service.impl;
 
+import hello.lunchback.login.entity.MemberEntity;
+import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
 import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
 import hello.lunchback.menuManagement.dto.request.PutStoreMenuDelete;
@@ -41,6 +43,7 @@ public class MenuServiceImpl implements MenuService {
     private final StoreRepository storeRepository;
     private final FileRepository fileRepository;
     private final MenuRepository menuRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${file.filePath}")
     private String filePath;
@@ -49,44 +52,41 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public ResponseEntity<? super PostMenuAddResponseDto> add(PostMenuAddRequestDto dto) {
+    public PostMenuAddResponseDto add(PostMenuAddRequestDto dto, String email) {
         log.info("MenuServiceImpl : add : start");
         MenuEntity menuEntity = new MenuEntity(dto);
         StoreEntity storeEntity = new StoreEntity();
         try {
-            storeEntity = storeRepository.findByStoreId(dto.getStoreId())
+
+            MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
-            if (storeEntity == null){
-                log.info("MenuServiceImpl : add : Error");
-                return PostMenuAddResponseDto.notExistedStore("등록되지 않은 가게입니다.");
-            }
+            storeEntity = member.getStore();
+
             String uuidFileName = saveFile(dto);
             menuEntity.setStore(storeEntity);
             menuEntity.setMenuImage(uuidFileName);
             menuRepository.save(menuEntity);
         }catch (Exception e){
             e.printStackTrace();
-            return PostMenuAddResponseDto.databaseError();
         }
         log.info("MenuServiceImpl : add : complete");
         return PostMenuAddResponseDto.success();
     }
 
     @Override
-    public ResponseEntity<? super GetStoreMenuListResponseDto> menuList(Integer storeId) {
+    public GetStoreMenuListResponseDto menuList(String email) {
         List<GetStoreMenuItem> item = new ArrayList<>();
         try {
             // 1. 사진, 2. 메뉴 이름 ,메뉴 설명 , 가격
-            StoreEntity storeEntity = storeRepository.findByStoreId(storeId)
+            MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
+            StoreEntity storeEntity = member.getStore();
             if (storeEntity == null){
-                return GetStoreMenuListResponseDto.databaseError();
             }
             List<MenuEntity> menuList = storeEntity.getMenuList();
             item = changeImageName(menuList);
         }catch (Exception e){
             e.printStackTrace();
-            return GetStoreMenuListResponseDto.databaseError();
         }
         return GetStoreMenuListResponseDto.success(item);
     }
@@ -98,30 +98,35 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public ResponseEntity<? super PutStoreMenuDelete> delete(Integer storeId, Integer menuId) {
+    public PutStoreMenuDelete delete(String email, Integer menuId) {
 
+        // email로 멤버 찾고, store 찾아가서 , 메뉴Id로 해당 메뉴 삭제
         try {
-            StoreEntity storeEntity = storeRepository.findByStoreId(storeId)
+            MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
-            MenuEntity menuEntity = storeEntity.getMenuList().stream()
-                    .filter(menu -> menu.getMenuId().equals(menuId))
-                    .findFirst()
-                    .orElse(null);
-            storeEntity.getMenuList().remove(menuEntity);
+            StoreEntity store = member.getStore();
+            for (MenuEntity menu : store.getMenuList()) {
+                if (menu.getMenuId().equals(menuId)){
+                    store.getMenuList().remove(menu);
+                    break;
+                }
+            }
+
+
         }catch (Exception e){
             e.printStackTrace();
-            return PutStoreMenuDelete.databaseError();
         }
         return PutStoreMenuDelete.success();
     }
 
     @Override
     @Transactional
-    public ResponseEntity<? super PostMenuUpdateResponseDto> menuUpdate(Integer storeId, Integer menuId, PostMenuUpdateRequestDto dto) {
+    public PostMenuUpdateResponseDto menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto) {
 
         try {
-            StoreEntity storeEntity = storeRepository.findByStoreId(storeId)
+            MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
+            StoreEntity storeEntity = member.getStore();
             MenuEntity menuEntity = storeEntity.getMenuList().stream()
                     .filter(menu -> menu.getMenuId().equals(menuId))
                     .findFirst()
@@ -129,7 +134,6 @@ public class MenuServiceImpl implements MenuService {
             menuEntity.update(dto);
         }catch (Exception e){
             e.printStackTrace();
-            return PostMenuUpdateResponseDto.databaseError();
         }
         return PostMenuUpdateResponseDto.success();
     }
@@ -151,7 +155,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     private String saveFile(PostMenuAddRequestDto dto) {
-        MultipartFile menuImage = dto.getMenuImage();
+        MultipartFile menuImage = dto.getMenuImg();
         String originalFilename = menuImage.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String uuidFileName = UUID.randomUUID().toString() + extension;

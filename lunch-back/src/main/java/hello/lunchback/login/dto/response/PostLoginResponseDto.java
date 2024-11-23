@@ -3,35 +3,32 @@ package hello.lunchback.login.dto.response;
 import hello.lunchback.common.response.ResponseCode;
 import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.common.response.ResponseMessage;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-@Getter
-public class PostLoginResponseDto extends ResponseDto {
+@Data
+@NoArgsConstructor
+public class PostLoginResponseDto  {
 
+    private String code;
     private String token;
+    private Boolean isMember;
 
 
 
-    public PostLoginResponseDto() {
-        super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-    }
 
-    public PostLoginResponseDto(String token) {
-        super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    public PostLoginResponseDto(String code,String token, Boolean isMember) {
         this.token = token;
+        this.code = code;
+        this.isMember = isMember;
     }
 
-    public static ResponseEntity<? super PostLoginResponseDto> success(String token){
-        PostLoginResponseDto responseDto = new PostLoginResponseDto(token);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
-
-    public static ResponseEntity<ResponseDto> notExistedUser(){
-        ResponseDto responseDto = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
-        return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(responseDto);
+    public static PostLoginResponseDto success(String token, Boolean isMember){
+        PostLoginResponseDto responseDto = new PostLoginResponseDto("SU",token, isMember);
+        return responseDto;
     }
 
 

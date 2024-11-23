@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Interceptor;
 
 @Entity(name = "menu")
@@ -20,18 +21,28 @@ public class MenuEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer menuId;
     @ManyToOne
+    @ToString.Exclude
     private StoreEntity store;
     private String menuName;
     private String menuImage;
     @Column(columnDefinition = "TEXT")
     private String menuDescription;
     private Integer menuPrice;
-    private String nutrients;
+    private Integer calorie;
+    private Integer carbs;
+    private Integer protein;
+    private Integer fat;
+    private Integer isSoldOut;
 
     public MenuEntity(PostMenuAddRequestDto dto) {
-        this.menuName = dto.getMenuName();
-        this.menuDescription = dto.getMenuDescription();
-        this.menuPrice = dto.getMenuPrice();
+        this.menuName = dto.getName();
+        this.menuDescription = dto.getDescription();
+        this.menuPrice = dto.getPrice();
+        this.calorie = dto.getCalorie();
+        this.carbs = dto.getCarbs();
+        this.protein = dto.getProtein();
+        this.fat = dto.getFat();
+        this.isSoldOut = 0;
     }
 
 
@@ -40,9 +51,12 @@ public class MenuEntity {
     }
 
     public void update(PostMenuUpdateRequestDto dto) {
-        this.menuName = dto.getMenuName();
-        this.menuDescription = dto.getMenuDescription();
-        this.menuPrice = dto.getMenuPrice();
-        this.nutrients = dto.getNutrients();
+        this.menuName = dto.getName();
+        this.menuDescription = dto.getDescription();
+        this.menuPrice = dto.getPrice();
+        this.calorie = dto.getCalorie();
+        this.carbs = dto.getCarbs();
+        this.protein = dto.getProtein();
+        this.fat = dto.getFat();
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface LoginService extends UserDetailsService {
 
 
-    ResponseEntity<? super PostLoginResponseDto> login(PostLoginRequestDto dto);
+    PostLoginResponseDto login(PostLoginRequestDto dto);
 
-    ResponseEntity<? super PostJoinResponseDto> join(PostJoinRequestDto dto);
+    PostJoinResponseDto join(PostJoinRequestDto dto);
 }

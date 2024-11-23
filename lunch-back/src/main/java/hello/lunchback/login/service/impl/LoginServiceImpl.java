@@ -22,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,9 +51,10 @@ public class LoginServiceImpl implements LoginService {
     // 로그인
     @Override
     @Transactional
-    public ResponseEntity<? super PostLoginResponseDto> login(PostLoginRequestDto dto) {
+    public PostLoginResponseDto login(PostLoginRequestDto dto) {
         log.info("LoginServiceImpl : login : start");
         String token = null;
+        Boolean isMember = true;
         try {
             // 사용자 인증
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
@@ -60,23 +62,27 @@ public class LoginServiceImpl implements LoginService {
             UserDetails principal = (UserDetails) authenticate.getPrincipal();
             // JWT 생성
             token = jwtProvider.create(principal);
+            for (GrantedAuthority authority : authenticate.getAuthorities()) {
+                if (authority.getAuthority().equals(RoleType.restaurant.toString())){
+                    isMember = false;
+                }
+            }
+
             log.info("create Token : {}",token);
         }catch (UsernameNotFoundException e) {
             log.info("LoginServiceImpl : login : error : UsernameNotFoundException");
-            return PostLoginResponseDto.notExistedUser();
         }catch (BadCredentialsException e){
             log.info("LoginServiceImpl : login : error : BadCredentialsException");
-            return PostLoginResponseDto.notExistedUser();
         }
         log.info("LoginServiceImpl : login : complete");
-        return PostLoginResponseDto.success(token);
+        return PostLoginResponseDto.success(token,isMember);
 
     }
 
     // 회원가입
     @Override
     @Transactional
-    public ResponseEntity<? super PostJoinResponseDto> join(PostJoinRequestDto dto) {
+    public PostJoinResponseDto join(PostJoinRequestDto dto) {
         log.info("LoginServiceImpl : join : start");
         MemberEntity member = new MemberEntity();
         RoleEntity role = new RoleEntity();
@@ -85,7 +91,6 @@ public class LoginServiceImpl implements LoginService {
             Boolean isDuplicated = duplicatedEmail(dto);
             if (isDuplicated){
                 log.info("LoginServiceImpl : join : isDuplicated : True");
-                return PostJoinResponseDto.notExisted("이미 존재하는 email 입니다.");
             }
              role = roleRepository.findByRoleName(RoleType.consumer.toString());
 
@@ -96,7 +101,6 @@ public class LoginServiceImpl implements LoginService {
         }catch (Exception e) {
             log.info("LoginServiceImpl : join : error ={}");
             e.printStackTrace();
-            return PostJoinResponseDto.databaseError();
         }
         // 2. password 암호화
         // 3. 저장

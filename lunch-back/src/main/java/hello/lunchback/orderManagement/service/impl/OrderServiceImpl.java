@@ -17,6 +17,7 @@ import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
 import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final StoreRepository storeRepository;
     private final KakaoService kakaoService;
     private final OrderRepository orderRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     // 주문 내역 조회
     @Override
@@ -106,6 +108,8 @@ public class OrderServiceImpl implements OrderService {
             orderEntity.setPay(true);
             orderRepository.save(orderEntity);
             waitingManager.add(storeId,orderEntity.getOrderId());
+            String message = "새로운 주문이 도착했습니다.";
+            messagingTemplate.convertAndSend("/room/"+ store.getMember().getMemberId(),message);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -10,7 +10,9 @@ import hello.lunchback.menuManagement.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -22,16 +24,16 @@ public class MenuController {
     private final MenuService menuService;
 
     // 메뉴 등록
-    @PostMapping("/menu/add")
-    public ResponseEntity<? super PostMenuAddResponseDto> add(@ModelAttribute PostMenuAddRequestDto dto){
-        ResponseEntity<? super PostMenuAddResponseDto> result = menuService.add(dto);
+    @PostMapping(value = "/store/menu/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostMenuAddResponseDto add(@ModelAttribute PostMenuAddRequestDto dto, @AuthenticationPrincipal String email){
+        PostMenuAddResponseDto result = menuService.add(dto, email);
         return result;
     }
 
     // 메뉴 조회
-    @GetMapping("/{storeId}")
-    public ResponseEntity<? super GetStoreMenuListResponseDto> storeMenuList(@PathVariable(name = "storeId")Integer storeId) throws MalformedURLException {
-        ResponseEntity<? super GetStoreMenuListResponseDto> result = menuService.menuList(storeId);
+    @GetMapping(value = "/store/list" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public GetStoreMenuListResponseDto storeMenuList(@AuthenticationPrincipal String email) throws MalformedURLException {
+        GetStoreMenuListResponseDto result = menuService.menuList(email);
         return result;
     }
 
@@ -44,20 +46,20 @@ public class MenuController {
 
     // 박승한 - 21학번
     // 메뉴 삭제
-    @DeleteMapping("/{storeId}/{menuId}")
-    public ResponseEntity<? super PutStoreMenuDelete> menuDelete(@PathVariable(name = "storeId")Integer storeId, @PathVariable(name = "menuId")Integer menuId){
-        ResponseEntity<? super PutStoreMenuDelete> result = menuService.delete(storeId, menuId);
+    @DeleteMapping(value = "/store/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PutStoreMenuDelete menuDelete(@PathVariable(name = "menuId")Integer menuId, @AuthenticationPrincipal String email){
+        PutStoreMenuDelete result = menuService.delete(email, menuId);
         return result;
     }
 
     // 품절 등록
 
     // 메뉴 수정
-    @PutMapping("/{storeId}/{menuId}")
-    public ResponseEntity<? super PostMenuUpdateResponseDto> menuUpdate(@PathVariable(name = "storeId")Integer storeId,
+    @PutMapping(value = "/store/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostMenuUpdateResponseDto menuUpdate(@AuthenticationPrincipal String email,
                                                                         @PathVariable(name = "menuId")Integer menuId,
                                                                         @RequestBody PostMenuUpdateRequestDto dto){
-        ResponseEntity<? super PostMenuUpdateResponseDto> result = menuService.menuUpdate(storeId, menuId, dto);
+        PostMenuUpdateResponseDto result = menuService.menuUpdate(email, menuId, dto);
         return result;
     }
 
