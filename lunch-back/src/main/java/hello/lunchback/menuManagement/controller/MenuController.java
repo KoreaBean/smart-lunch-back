@@ -24,7 +24,7 @@ public class MenuController {
     private final MenuService menuService;
 
     // 메뉴 등록
-    @PostMapping(value = "/store/menu/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/menu/save", produces = MediaType.APPLICATION_JSON_VALUE)
     public PostMenuAddResponseDto add(@ModelAttribute PostMenuAddRequestDto dto, @AuthenticationPrincipal String email){
         PostMenuAddResponseDto result = menuService.add(dto, email);
         return result;
@@ -46,7 +46,7 @@ public class MenuController {
 
     // 박승한 - 21학번
     // 메뉴 삭제
-    @DeleteMapping(value = "/store/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/menu/delete/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PutStoreMenuDelete menuDelete(@PathVariable(name = "menuId")Integer menuId, @AuthenticationPrincipal String email){
         PutStoreMenuDelete result = menuService.delete(email, menuId);
         return result;
@@ -55,10 +55,10 @@ public class MenuController {
     // 품절 등록
 
     // 메뉴 수정
-    @PutMapping(value = "/store/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/menu/update/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PostMenuUpdateResponseDto menuUpdate(@AuthenticationPrincipal String email,
                                                                         @PathVariable(name = "menuId")Integer menuId,
-                                                                        @RequestBody PostMenuUpdateRequestDto dto){
+                                                                        @ModelAttribute PostMenuUpdateRequestDto dto){
         PostMenuUpdateResponseDto result = menuService.menuUpdate(email, menuId, dto);
         return result;
     }

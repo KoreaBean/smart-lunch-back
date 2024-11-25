@@ -3,21 +3,14 @@ package hello.lunchback.login.controller;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PostLoginRequestDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
-import hello.lunchback.login.dto.response.PostLoginResponseDto;
+import hello.lunchback.login.dto.response.LoginResponse;
+import hello.lunchback.login.dto.response.PutUpdateResponseDto;
 import hello.lunchback.login.service.LoginService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +21,9 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostLoginResponseDto login(@RequestBody PostLoginRequestDto dto){
+    public LoginResponse login(@RequestBody PostLoginRequestDto dto){
 
-        PostLoginResponseDto login = loginService.login(dto);
+        LoginResponse login = loginService.login(dto);
         return login;
     }
 
@@ -39,4 +32,12 @@ public class LoginController {
         PostJoinResponseDto join = loginService.join(dto);
         return join;
     }
+
+//    // 회원 정보 수정
+//    @PutMapping(value = "/update",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public PutUpdateResponseDto update (@AuthenticationPrincipal String email, PostJoinResponseDto dto){
+//        loginService.update(email, dto);
+//    }
+//
+//
 }

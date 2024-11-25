@@ -1,11 +1,10 @@
 package hello.lunchback.login.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PostLoginRequestDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
-import hello.lunchback.login.dto.response.PostLoginResponseDto;
+import hello.lunchback.login.dto.response.LoginResponse;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.entity.RoleEntity;
 import hello.lunchback.login.entity.RoleType;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,12 +25,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 @Slf4j
@@ -51,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
     // 로그인
     @Override
     @Transactional
-    public PostLoginResponseDto login(PostLoginRequestDto dto) {
+    public LoginResponse login(PostLoginRequestDto dto) {
         log.info("LoginServiceImpl : login : start");
         String token = null;
         Boolean isMember = true;
@@ -75,7 +70,7 @@ public class LoginServiceImpl implements LoginService {
             log.info("LoginServiceImpl : login : error : BadCredentialsException");
         }
         log.info("LoginServiceImpl : login : complete");
-        return PostLoginResponseDto.success(token,isMember);
+        return LoginResponse.success(token,isMember);
 
     }
 

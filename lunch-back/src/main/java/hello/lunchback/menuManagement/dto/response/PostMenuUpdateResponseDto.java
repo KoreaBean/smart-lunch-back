@@ -13,15 +13,10 @@ import org.springframework.http.ResponseEntity;
 public class PostMenuUpdateResponseDto {
 
 
-    private String code;
-
-    public PostMenuUpdateResponseDto(String code) {
-        this.code = code;
-    }
 
 
     public static PostMenuUpdateResponseDto success() {
-        PostMenuUpdateResponseDto result = new PostMenuUpdateResponseDto("SU");
+        PostMenuUpdateResponseDto result = new PostMenuUpdateResponseDto();
         return  result;
     }
 }

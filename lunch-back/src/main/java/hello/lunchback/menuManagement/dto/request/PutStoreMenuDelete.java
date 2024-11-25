@@ -13,14 +13,9 @@ import org.springframework.http.ResponseEntity;
 public class PutStoreMenuDelete {
 
 
-    private String code;
-
-    public PutStoreMenuDelete(String code) {
-        this.code = code;
-    }
 
     public static PutStoreMenuDelete success() {
-        PutStoreMenuDelete result = new PutStoreMenuDelete("SU");
+        PutStoreMenuDelete result = new PutStoreMenuDelete();
         return result;
     }
 

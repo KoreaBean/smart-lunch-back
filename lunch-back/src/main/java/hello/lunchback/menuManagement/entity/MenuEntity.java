@@ -42,7 +42,7 @@ public class MenuEntity {
         this.carbs = dto.getCarbs();
         this.protein = dto.getProtein();
         this.fat = dto.getFat();
-        this.isSoldOut = 0;
+        this.isSoldOut = dto.getIsSoldOut();
     }
 
 

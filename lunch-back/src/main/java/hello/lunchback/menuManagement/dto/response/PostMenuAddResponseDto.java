@@ -14,15 +14,8 @@ import org.springframework.http.ResponseEntity;
 public class PostMenuAddResponseDto  {
 
 
-    private String code;
-
-    public PostMenuAddResponseDto(String code) {
-        this.code = code;
-    }
-
-
     public static PostMenuAddResponseDto success() {
-        PostMenuAddResponseDto result = new PostMenuAddResponseDto("SU");
+        PostMenuAddResponseDto result = new PostMenuAddResponseDto();
         return result;
     }
 }
