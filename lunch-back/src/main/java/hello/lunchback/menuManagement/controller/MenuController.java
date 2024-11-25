@@ -3,15 +3,14 @@ package hello.lunchback.menuManagement.controller;
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
 import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
 import hello.lunchback.menuManagement.dto.request.PutStoreMenuDelete;
+import hello.lunchback.menuManagement.dto.response.GetStoreMenuDetailResponseDto;
 import hello.lunchback.menuManagement.dto.response.GetStoreMenuListResponseDto;
-import hello.lunchback.menuManagement.dto.response.PostMenuAddResponseDto;
 import hello.lunchback.menuManagement.dto.response.PostMenuUpdateResponseDto;
 import hello.lunchback.menuManagement.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +24,22 @@ public class MenuController {
 
     // 메뉴 등록
     @PostMapping(value = "/menu/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostMenuAddResponseDto add(@ModelAttribute PostMenuAddRequestDto dto, @AuthenticationPrincipal String email){
-        PostMenuAddResponseDto result = menuService.add(dto, email);
-        return result;
+    public void add(@ModelAttribute PostMenuAddRequestDto dto, @AuthenticationPrincipal String email){
+        menuService.add(dto, email);
     }
 
     // 메뉴 조회
     @GetMapping(value = "/store/list" , produces = MediaType.APPLICATION_JSON_VALUE)
     public GetStoreMenuListResponseDto storeMenuList(@AuthenticationPrincipal String email) throws MalformedURLException {
-        GetStoreMenuListResponseDto result = menuService.menuList(email);
+        GetStoreMenuListResponseDto result = menuService.getMenuList(email);
+        return result;
+    }
+
+    // 메뉴 상세 조회
+    @GetMapping("/store/list/{menuId}")
+    public GetStoreMenuDetailResponseDto storeMenuListDetail(@AuthenticationPrincipal String email,
+                                                             @PathVariable(name = "menuId") Integer menuId){
+        GetStoreMenuDetailResponseDto result = menuService.getMenuInfo(email, menuId);
         return result;
     }
 

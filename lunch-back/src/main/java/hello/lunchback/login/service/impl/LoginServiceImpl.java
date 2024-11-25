@@ -4,6 +4,7 @@ import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PostLoginRequestDto;
 import hello.lunchback.login.dto.request.PutMemberUpdateRequestDto;
+import hello.lunchback.login.dto.response.GetMemberResponseDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
 import hello.lunchback.login.dto.response.LoginResponse;
 import hello.lunchback.login.dto.response.PutUpdateResponseDto;
@@ -116,6 +117,20 @@ public class LoginServiceImpl implements LoginService {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public GetMemberResponseDto getMember(String email) {
+        MemberEntity member = new MemberEntity();
+        try {
+
+            member = memberRepository.findByMemberEmail(email)
+                    .orElse(null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return GetMemberResponseDto.succss(member);
+
     }
 
     private Boolean duplicatedEmail(PostJoinRequestDto dto) {

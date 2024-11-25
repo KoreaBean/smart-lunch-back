@@ -1,7 +1,8 @@
 
 
+-- 테이블 새로 만들 시 한번 실행
+
 -- Role 데이터 삽입
-#
 insert into roles values
                       (1, '관리자','admin'),
                       (2, '식당','restaurant'),

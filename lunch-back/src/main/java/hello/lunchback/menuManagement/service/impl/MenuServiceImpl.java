@@ -5,10 +5,7 @@ import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
 import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
 import hello.lunchback.menuManagement.dto.request.PutStoreMenuDelete;
-import hello.lunchback.menuManagement.dto.response.GetStoreMenuItem;
-import hello.lunchback.menuManagement.dto.response.GetStoreMenuListResponseDto;
-import hello.lunchback.menuManagement.dto.response.PostMenuAddResponseDto;
-import hello.lunchback.menuManagement.dto.response.PostMenuUpdateResponseDto;
+import hello.lunchback.menuManagement.dto.response.*;
 import hello.lunchback.menuManagement.entity.FileEntity;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.menuManagement.repository.FileRepository;
@@ -52,7 +49,7 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public PostMenuAddResponseDto add(PostMenuAddRequestDto dto, String email) {
+    public void add(PostMenuAddRequestDto dto, String email) {
         log.info("MenuServiceImpl : add : start");
         MenuEntity menuEntity = new MenuEntity(dto);
         StoreEntity storeEntity = new StoreEntity();
@@ -70,11 +67,10 @@ public class MenuServiceImpl implements MenuService {
             e.printStackTrace();
         }
         log.info("MenuServiceImpl : add : complete");
-        return PostMenuAddResponseDto.success();
     }
 
     @Override
-    public GetStoreMenuListResponseDto menuList(String email) {
+    public GetStoreMenuListResponseDto getMenuList(String email) {
         List<GetStoreMenuItem> item = new ArrayList<>();
         try {
             // 1. 사진, 2. 메뉴 이름 ,메뉴 설명 , 가격
@@ -137,6 +133,31 @@ public class MenuServiceImpl implements MenuService {
         }
         return PostMenuUpdateResponseDto.success();
     }
+
+    @Override
+    public GetStoreMenuDetailResponseDto getMenuInfo(String email, Integer menuId) {
+
+        MemberEntity member = memberRepository.findByMemberEmail(email)
+                .orElse(null);
+        MenuEntity menuEntity = member.getStore().getMenuList().stream()
+                .filter(menu -> menu.getMenuId().equals(menuId))
+                .findFirst()
+                .orElse(null);
+        menuEntity.setMenuImage(changeImageName(menuEntity.getMenuImage()));
+        return GetStoreMenuDetailResponseDto.success(menuEntity);
+    }
+
+
+    private String changeImageName(String menuImage) {
+        String urlImage = "";
+        try {
+            urlImage = fileUrl + menuImage;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return urlImage;
+    }
+
 
     private List<GetStoreMenuItem> changeImageName(List<MenuEntity> menuList) {
         List<GetStoreMenuItem> list = new ArrayList<>();
