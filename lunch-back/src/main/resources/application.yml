@@ -7,13 +7,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     defer-datasource-initialization: true
 
   sql:
     init:
-      mode: always
+      mode: embedded
   servlet:
     multipart:
       max-file-size: 100MB

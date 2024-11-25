@@ -2,6 +2,8 @@ package hello.lunchback.login.entity;
 
 import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
+import hello.lunchback.login.dto.request.PutMemberUpdateRequestDto;
+import hello.lunchback.login.dto.response.PostJoinResponseDto;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
@@ -51,5 +53,12 @@ public class MemberEntity {
         this.roles.add(role);
         role.addMember(this);
     }
+
+    public void update(PutMemberUpdateRequestDto dto) {
+        this.memberName = dto.getMemberName();
+        this.memberPhone = dto.getMemberPhone();
+        this.memberEmail = dto.getMemberEmail();
+    }
+
 
 }

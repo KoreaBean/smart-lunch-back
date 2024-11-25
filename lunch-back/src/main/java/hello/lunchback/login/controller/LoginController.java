@@ -2,6 +2,7 @@ package hello.lunchback.login.controller;
 
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PostLoginRequestDto;
+import hello.lunchback.login.dto.request.PutMemberUpdateRequestDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
 import hello.lunchback.login.dto.response.LoginResponse;
 import hello.lunchback.login.dto.response.PutUpdateResponseDto;
@@ -32,12 +33,13 @@ public class LoginController {
         PostJoinResponseDto join = loginService.join(dto);
         return join;
     }
-
+//
 //    // 회원 정보 수정
 //    @PutMapping(value = "/update",produces = MediaType.APPLICATION_JSON_VALUE)
-//    public PutUpdateResponseDto update (@AuthenticationPrincipal String email, PostJoinResponseDto dto){
+//    public void update (@AuthenticationPrincipal String email, PutMemberUpdateRequestDto dto){
 //        loginService.update(email, dto);
 //    }
-//
-//
+
+
+
 }

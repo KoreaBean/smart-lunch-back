@@ -3,8 +3,10 @@ package hello.lunchback.login.service.impl;
 import hello.lunchback.common.config.BcyptEncoder;
 import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PostLoginRequestDto;
+import hello.lunchback.login.dto.request.PutMemberUpdateRequestDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
 import hello.lunchback.login.dto.response.LoginResponse;
+import hello.lunchback.login.dto.response.PutUpdateResponseDto;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.entity.RoleEntity;
 import hello.lunchback.login.entity.RoleType;
@@ -101,6 +103,19 @@ public class LoginServiceImpl implements LoginService {
         // 3. 저장
         log.info("LoginServiceImpl : join : complete");
         return PostJoinResponseDto.success();
+    }
+
+    @Override
+    public void update(String email, PutMemberUpdateRequestDto dto) {
+
+        try {
+            MemberEntity member = memberRepository.findByMemberEmail(email)
+                    .orElse(null);
+            member.update(dto);
+            memberRepository.save(member);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private Boolean duplicatedEmail(PostJoinRequestDto dto) {
