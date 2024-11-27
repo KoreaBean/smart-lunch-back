@@ -1,4 +1,4 @@
-package hello.lunchback.diet.dto.response;
+package hello.lunchback.dietInfoManager.dto.response;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

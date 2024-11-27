@@ -49,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
     // 로그인
     @Override
     @Transactional
-    public LoginResponse login(PostLoginRequestDto dto) {
+    public LoginResponse findMemberInfo(PostLoginRequestDto dto) {
         log.info("LoginServiceImpl : login : start");
         String token = null;
         Boolean isMember = true;
@@ -107,7 +107,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void update(String email, PutMemberUpdateRequestDto dto) {
+    public void updateMemberInfo(String email, PutMemberUpdateRequestDto dto) {
 
         try {
             MemberEntity member = memberRepository.findByMemberEmail(email)
@@ -120,7 +120,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public GetMemberResponseDto getMember(String email) {
+    public GetMemberResponseDto getMemberInfo(String email) {
         MemberEntity member = new MemberEntity();
         try {
 

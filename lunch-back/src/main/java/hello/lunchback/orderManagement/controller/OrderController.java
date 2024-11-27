@@ -1,21 +1,14 @@
 package hello.lunchback.orderManagement.controller;
 
-import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryDetailResponseDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDto;
-import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
 import hello.lunchback.orderManagement.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -31,7 +24,7 @@ public class OrderController {
     //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
     @GetMapping(value = "/order/history", produces = MediaType.APPLICATION_JSON_VALUE)
     public GetOrderHistoryResponseDto getOrderHistoryList(@AuthenticationPrincipal String email){
-        GetOrderHistoryResponseDto result = orderService.orderHistory(email);
+        GetOrderHistoryResponseDto result = orderService.getOrderHistoryList(email);
         return result;
     }
 

@@ -1,7 +1,7 @@
-package hello.lunchback.diet.service;
+package hello.lunchback.dietInfoManager.service;
 
-import hello.lunchback.diet.dto.response.getDietList;
+import hello.lunchback.dietInfoManager.dto.response.getDietList;
 
 public interface DietService {
-    getDietList getDiet(String email);
+    getDietList getDietInfo(String email);
 }

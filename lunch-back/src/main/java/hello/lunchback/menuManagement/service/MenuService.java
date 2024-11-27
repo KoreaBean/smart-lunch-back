@@ -12,16 +12,16 @@ import java.net.MalformedURLException;
 public interface MenuService {
 
 
-    void add(PostMenuAddRequestDto dto, String email);
+    void createMenuData(PostMenuAddRequestDto dto, String email);
 
     GetStoreMenuListResponseDto getMenuList(String email) throws MalformedURLException;
 
     String getImage(String fileName);
 
-    PutStoreMenuDelete delete(String email, Integer menuId);
+    void delete(String email, Integer menuId);
 
 
-    PostMenuUpdateResponseDto menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto);
+    void menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto);
 
     GetStoreMenuDetailResponseDto getMenuInfo(String email, Integer menuId);
 }

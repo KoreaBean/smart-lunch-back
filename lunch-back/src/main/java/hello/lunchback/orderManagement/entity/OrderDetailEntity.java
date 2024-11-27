@@ -16,7 +16,7 @@ public class OrderDetailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderDetailId;
-    @ManyToOne
+    @ManyToOne()
     @ToString.Exclude
     private OrderEntity order;
     private String menuName;

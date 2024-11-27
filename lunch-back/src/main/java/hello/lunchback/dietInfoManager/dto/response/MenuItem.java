@@ -1,12 +1,8 @@
-package hello.lunchback.diet.dto.response;
+package hello.lunchback.dietInfoManager.dto.response;
 
 import hello.lunchback.menuManagement.entity.MenuEntity;
-import hello.lunchback.orderManagement.entity.OrderDetailEntity;
-import hello.lunchback.orderManagement.entity.OrderEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor

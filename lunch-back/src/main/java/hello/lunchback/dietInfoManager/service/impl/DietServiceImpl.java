@@ -1,9 +1,9 @@
-package hello.lunchback.diet.service.impl;
+package hello.lunchback.dietInfoManager.service.impl;
 
-import hello.lunchback.diet.dto.response.Diet;
-import hello.lunchback.diet.dto.response.MenuItem;
-import hello.lunchback.diet.dto.response.getDietList;
-import hello.lunchback.diet.service.DietService;
+import hello.lunchback.dietInfoManager.dto.response.Diet;
+import hello.lunchback.dietInfoManager.dto.response.MenuItem;
+import hello.lunchback.dietInfoManager.dto.response.getDietList;
+import hello.lunchback.dietInfoManager.service.DietService;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.menuManagement.entity.MenuEntity;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +27,7 @@ public class DietServiceImpl implements DietService {
 
     @Override
     @Transactional
-    public getDietList getDiet(String email) {
+    public getDietList getDietInfo(String email) {
         //해당일 구매한 이력 모두 가져와서 menuItem 반환
         getDietList getDietList = new getDietList();
         try {

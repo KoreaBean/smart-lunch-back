@@ -49,7 +49,7 @@ public class MenuServiceImpl implements MenuService {
 
 
     @Override
-    public void add(PostMenuAddRequestDto dto, String email) {
+    public void createMenuData(PostMenuAddRequestDto dto, String email) {
         log.info("MenuServiceImpl : add : start");
         MenuEntity menuEntity = new MenuEntity(dto);
         StoreEntity storeEntity = new StoreEntity();
@@ -94,7 +94,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Transactional
-    public PutStoreMenuDelete delete(String email, Integer menuId) {
+    public void delete(String email, Integer menuId) {
 
         // email로 멤버 찾고, store 찾아가서 , 메뉴Id로 해당 메뉴 삭제
         try {
@@ -112,12 +112,11 @@ public class MenuServiceImpl implements MenuService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return PutStoreMenuDelete.success();
     }
 
     @Override
     @Transactional
-    public PostMenuUpdateResponseDto menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto) {
+    public void menuUpdate(String email, Integer menuId, PostMenuUpdateRequestDto dto) {
 
         try {
             MemberEntity member = memberRepository.findByMemberEmail(email)
@@ -131,7 +130,6 @@ public class MenuServiceImpl implements MenuService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return PostMenuUpdateResponseDto.success();
     }
 
     @Override

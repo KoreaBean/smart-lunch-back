@@ -1,7 +1,7 @@
-package hello.lunchback.diet.controller;
+package hello.lunchback.dietInfoManager.controller;
 
-import hello.lunchback.diet.dto.response.getDietList;
-import hello.lunchback.diet.service.DietService;
+import hello.lunchback.dietInfoManager.dto.response.getDietList;
+import hello.lunchback.dietInfoManager.service.DietService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +16,7 @@ public class DietController {
 
     @GetMapping(value = "/diet",produces = MediaType.APPLICATION_JSON_VALUE)
     public getDietList diet(@AuthenticationPrincipal String email){
-        getDietList diet = dietService.getDiet(email);
+        getDietList diet = dietService.getDietInfo(email);
         return diet;
     }
 

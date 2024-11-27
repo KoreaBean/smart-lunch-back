@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
 
     // 주문 내역 조회
     @Override
-    public GetOrderHistoryResponseDto orderHistory(String email) {
+    public GetOrderHistoryResponseDto getOrderHistoryList(String email) {
         List<OrderEntity> orderList = new ArrayList<>();
         List<OrderHistoryItem> historyItems = new ArrayList<>();
         try {
@@ -75,35 +75,16 @@ public class OrderServiceImpl implements OrderService {
             }
             store = storeRepository.findByStoreId(storeId)
                     .orElse(null);
-            OrderEntity orderEntity = new OrderEntity(store, dto, member);
-            orderRepository.save(orderEntity);
-            member.getOrderList().add(orderEntity);
-            // new order 만들고
-            // orderDetail 만들고
-            // 카카오페이 결제 연결 하고
-            // ok 떨어지면 결제 승인 -> 완료
-            // -> 가게 알람
-            // -> 사용자 알람
+            OrderEntity orderEntity = saveOrderInfo(dto, store, member);
+
             StringBuilder sb = new StringBuilder();
             Integer quantity = 0;
             for (MenuListItem menuListItem : dto.getList()) {
                     sb.append(menuListItem.getMenuName());
                     quantity = quantity + menuListItem.getQuantity();
             }
+            KakaopayRequestDto kakaopayRequestDto = getKakaopayRequestDto(dto, orderEntity, member, sb, quantity);
 
-
-            KakaopayRequestDto kakaopayRequestDto = KakaopayRequestDto.builder()
-                    .cid("TC0ONETIME")
-                    .partner_order_id(String.valueOf(orderEntity.getOrderId()))
-                    .partner_user_id(String.valueOf(member.getMemberId()))
-                    .item_name(sb.toString())
-                    .quantity(quantity)
-                    .total_amount(dto.getTotalPrice())
-                    .tax_free_amount(0)
-                    .approval_url("http://localhost:8080/kakaopay/payment/success")
-                    .fail_url("http://localhost:8080/kakaopay/payment/fail")
-                    .cancel_url("http://localhost:8080/kakaopay/payment/cancel")
-                    .build();
             kakaopayResponseDto = kakaoService.requestPayment(kakaopayRequestDto);
             orderEntity.setPay(true);
             orderRepository.save(orderEntity);
@@ -114,6 +95,30 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         return kakaopayResponseDto;
+    }
+
+    // 결제 요청
+    private static KakaopayRequestDto getKakaopayRequestDto(PostOrderRequestDto dto, OrderEntity orderEntity, MemberEntity member, StringBuilder sb, Integer quantity) {
+        KakaopayRequestDto kakaopayRequestDto = KakaopayRequestDto.builder()
+                .cid("TC0ONETIME")
+                .partner_order_id(String.valueOf(orderEntity.getOrderId()))
+                .partner_user_id(String.valueOf(member.getMemberId()))
+                .item_name(sb.toString())
+                .quantity(quantity)
+                .total_amount(dto.getTotalPrice())
+                .tax_free_amount(0)
+                .approval_url("http://localhost:8080/kakaopay/payment/success")
+                .fail_url("http://localhost:8080/kakaopay/payment/fail")
+                .cancel_url("http://localhost:8080/kakaopay/payment/cancel")
+                .build();
+        return kakaopayRequestDto;
+    }
+
+    private OrderEntity saveOrderInfo(PostOrderRequestDto dto, StoreEntity store, MemberEntity member) {
+        OrderEntity orderEntity = new OrderEntity(store, dto, member);
+        orderRepository.save(orderEntity);
+        member.getOrderList().add(orderEntity);
+        return orderEntity;
     }
 
     // 주문 상세 정보 조회
@@ -131,7 +136,8 @@ public class OrderServiceImpl implements OrderService {
         List<GetOrderHistoryDetailItem> list = new ArrayList<>();
         Integer totalPrice = 0;
         for (OrderDetailEntity orderDetailEntity : order.getOrderDetail()) {
-            GetOrderHistoryDetailItem result = new GetOrderHistoryDetailItem(orderDetailEntity.getMenuName(), orderDetailEntity.getMenuPrice(), orderDetailEntity.getQuantity());
+            GetOrderHistoryDetailItem result = new GetOrderHistoryDetailItem(orderDetailEntity.getMenuName(),
+                    orderDetailEntity.getMenuPrice(), orderDetailEntity.getQuantity());
             totalPrice =+ result.getTotalPrice();
             list.add(result);
         }
@@ -140,6 +146,7 @@ public class OrderServiceImpl implements OrderService {
         return GetOrderHistoryDetailResponseDto.success(order,list,totalPrice,busy,myWait,predict);
     }
 
+    // 대기 계산
     private String predictTime(Integer myWait) {
         if (myWait <= 3){
             return "30";
@@ -149,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return "60분 이상";
     }
-
+    // 혼잡도 계산
     private String isBusy(OrderEntity order) {
         Integer busy = waitingManager.busy(order.getStore().getStoreId());
         if (busy <= 5){
@@ -161,9 +168,9 @@ public class OrderServiceImpl implements OrderService {
         return "혼잡";
     }
 
-    private OrderEntity getOrder(Integer orderId, MemberEntity member) {
+    private OrderEntity getOrder(Integer orderID, MemberEntity member) {
         return member.getOrderList().stream()
-                .filter(order -> orderId.equals(orderId))
+                .filter(order -> order.getOrderId().equals(orderID))
                 .findFirst()
                 .orElse(null);
     }

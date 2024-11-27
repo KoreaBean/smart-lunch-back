@@ -1,5 +1,6 @@
 package hello.lunchback.storeManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
@@ -23,7 +24,7 @@ public class StoreEntity {
     private String storeDescription;
     private String storeImage;
     @OneToOne
-    @ToString.Exclude
+    @JsonIgnore
     private MemberEntity member;
     @OneToMany(mappedBy = "store",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<MenuEntity> menuList = new ArrayList<>();
