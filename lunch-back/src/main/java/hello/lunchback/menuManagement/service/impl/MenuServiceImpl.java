@@ -78,7 +78,10 @@ public class MenuServiceImpl implements MenuService {
             menuList = memberRepository.findByMemberEmail(email)
                     .orElse(null)
                     .getStore()
-                    .getMenuList();
+                    .getMenuList()
+                    .stream()
+                    .peek(menu -> menu.setMenuImage(changeImageName(menu.getMenuImage())))
+                    .toList();
             if (menuList == null){
                 return GetStoreMenuListResponseDto.notExistedMenu();
             }
