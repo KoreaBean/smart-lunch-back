@@ -131,10 +131,45 @@ public class MenuServiceImpl implements MenuService {
                     .filter(menu -> menu.getMenuId().equals(menuId))
                     .findFirst()
                     .orElse(null);
-            menuEntity.update(dto);
+            String saveFile = saveFile(dto);
+            // 전에 있던 이미지 파일 삭제
+            deleteFile(menuEntity.getMenuImage());
+            menuEntity.update(dto, saveFile);
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void deleteFile(String menuImage) {
+        String filename = filePath + menuImage;
+        File file = new File(filename);
+        try {
+            if (file.exists() || file.isFile()){
+                file.delete();
+                log.info(filename + "삭제 성공");
+            }else {
+                log.info(filename+ "찾을 수 없는 파일입니다.");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private String saveFile(PostMenuUpdateRequestDto dto) {
+        // 이미지.png
+        MultipartFile menuImg = dto.getMenuImg();
+        String originalFilename = menuImg.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String uuidFileName = UUID.randomUUID().toString() + extension;
+        fileRepository.save(new FileEntity(originalFilename,uuidFileName));
+        String saveFile = filePath + uuidFileName;
+        try {
+            menuImg.transferTo(new File(saveFile));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return uuidFileName;
+
     }
 
     @Override

@@ -10,7 +10,7 @@ public class PostMenuUpdateRequestDto {
     private String name;
     private String description;
     private Integer price;
-    private String menuImg;
+    private MultipartFile menuImg;
     private Integer calorie;
     private Integer carbs;
     private Integer protein;

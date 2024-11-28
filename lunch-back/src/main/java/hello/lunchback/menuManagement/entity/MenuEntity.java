@@ -3,14 +3,11 @@ package hello.lunchback.menuManagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.menuManagement.dto.request.PostMenuAddRequestDto;
 import hello.lunchback.menuManagement.dto.request.PostMenuUpdateRequestDto;
-import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Interceptor;
 
 @Entity(name = "menu")
 @NoArgsConstructor
@@ -51,7 +48,7 @@ public class MenuEntity {
         this.store = storeEntity;
     }
 
-    public void update(PostMenuUpdateRequestDto dto) {
+    public void update(PostMenuUpdateRequestDto dto, String saveFile) {
         this.menuName = dto.getName();
         this.menuDescription = dto.getDescription();
         this.menuPrice = dto.getPrice();
@@ -59,5 +56,6 @@ public class MenuEntity {
         this.carbs = dto.getCarbs();
         this.protein = dto.getProtein();
         this.fat = dto.getFat();
+        this.menuImage = saveFile;
     }
 }
