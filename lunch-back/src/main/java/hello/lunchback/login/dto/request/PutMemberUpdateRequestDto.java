@@ -8,6 +8,6 @@ public class PutMemberUpdateRequestDto {
     private Long memberId;
     private String memberName;
     private String memberPhone;
-    private String memberEmail;
+    private String password;
 
 }

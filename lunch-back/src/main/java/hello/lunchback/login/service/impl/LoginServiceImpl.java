@@ -107,16 +107,22 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    @Transactional
     public void updateMemberInfo(String email, PutMemberUpdateRequestDto dto) {
 
         try {
             MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
+            encodePassword(dto);
             member.update(dto);
-            memberRepository.save(member);
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void encodePassword(PutMemberUpdateRequestDto dto) {
+        String encode = passwordEncoder.passwordEncoder().encode(dto.getPassword());
+        dto.setPassword(encode);
     }
 
     @Override

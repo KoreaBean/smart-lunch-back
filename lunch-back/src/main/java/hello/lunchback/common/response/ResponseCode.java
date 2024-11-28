@@ -12,7 +12,7 @@ public interface ResponseCode {
     String DUPLICATE_TEL_NUMBER = "DT";
     String NOT_EXISTED_USER = "NU";
     String NOT_EXISTED_STORE = "NS";
-
+    String NOT_EXISTED_MENU = "NM";
     // http status 401
     String SIGN_IN_FAIL = "SF";
     String AUTHORIZATION_FAIL = "AF";

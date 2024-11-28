@@ -12,7 +12,7 @@ public interface ResponseMessage {
     String DUPLICATE_TEL_NUMBER = "DUPLICATE_TEL_NUMBER";
     String NOT_EXISTED_USER = "NOT_EXISTED_USER";
     String NOT_EXISTED_BOARD = "NOT_EXISTED_BOARD";
-
+    String NOT_EXISTED_MENU = "NOT_EXISTED_MENU";
     // http status 401
     String SIGN_IN_FAIL = "SIGN_IN_FAIL";
     String AUTHORIZATION_FAIL = "UTHORIZATION_FAIL";

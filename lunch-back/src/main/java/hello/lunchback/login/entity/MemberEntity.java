@@ -57,7 +57,7 @@ public class MemberEntity {
     public void update(PutMemberUpdateRequestDto dto) {
         this.memberName = dto.getMemberName();
         this.memberPhone = dto.getMemberPhone();
-        this.memberEmail = dto.getMemberEmail();
+        this.memberPassword = dto.getPassword();
     }
 
 

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,18 +31,18 @@ public class MenuController {
 
     // 메뉴 조회
     @GetMapping(value = "/store/list" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public GetStoreMenuListResponseDto storeMenuList(@AuthenticationPrincipal String email) throws MalformedURLException {
-        GetStoreMenuListResponseDto result = menuService.getMenuList(email);
+    public ResponseEntity<? super GetStoreMenuListResponseDto> storeMenuList(@AuthenticationPrincipal String email) throws MalformedURLException {
+        ResponseEntity<? super GetStoreMenuListResponseDto> result = menuService.getMenuList(email);
         return result;
     }
-
-    // 메뉴 상세 조회
-    @GetMapping("/store/list/{menuId}")
-    public GetStoreMenuDetailResponseDto storeMenuListDetail(@AuthenticationPrincipal String email,
-                                                             @PathVariable(name = "menuId") Integer menuId){
-        GetStoreMenuDetailResponseDto result = menuService.getMenuInfo(email, menuId);
-        return result;
-    }
+//
+//    // 메뉴 상세 조회
+//    @GetMapping("/store/list/{menuId}")
+//    public GetStoreMenuDetailResponseDto storeMenuListDetail(@AuthenticationPrincipal String email,
+//                                                             @PathVariable(name = "menuId") Integer menuId){
+//        GetStoreMenuDetailResponseDto result = menuService.getMenuInfo(email, menuId);
+//        return result;
+//    }
 
     // 이미지 조회
     @ResponseBody

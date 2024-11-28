@@ -1,11 +1,7 @@
 package hello.lunchback.menuManagement.dto.response;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class GetStoreMenuItem {
@@ -14,14 +10,21 @@ public class GetStoreMenuItem {
     private String menuName;
     private String menuImage;
     private String menuDescription;
-    private Integer menuPrice;
+    private String menuImg;
+    private Integer price;
+    private Integer calorie;
+    private Integer carbs;
+    private Integer fat;
+    private Integer protein;
+    private Integer isSoldOut;
+    
 
     public GetStoreMenuItem(MenuEntity menuEntity, String image) {
         this.menuId = menuEntity.getMenuId();
         this.menuName = menuEntity.getMenuName();
         this.menuImage = image;
         this.menuDescription = menuEntity.getMenuDescription();
-        this.menuPrice = menuEntity.getMenuPrice();
+        this.price = menuEntity.getMenuPrice();
     }
 
 }

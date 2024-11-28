@@ -16,6 +16,7 @@ import hello.lunchback.storeManagement.repository.StoreRepository;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -70,21 +71,22 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public GetStoreMenuListResponseDto getMenuList(String email) {
-        List<GetStoreMenuItem> item = new ArrayList<>();
+    public ResponseEntity<? super GetStoreMenuListResponseDto> getMenuList(String email) {
+        List<MenuEntity> menuList = new ArrayList<>();
+        // 본인 상점의 모든 메뉴를 반환할때 메뉴의 모든 데이타 반환
         try {
-            // 1. 사진, 2. 메뉴 이름 ,메뉴 설명 , 가격
-            MemberEntity member = memberRepository.findByMemberEmail(email)
-                    .orElse(null);
-            StoreEntity storeEntity = member.getStore();
-            if (storeEntity == null){
+            menuList = memberRepository.findByMemberEmail(email)
+                    .orElse(null)
+                    .getStore()
+                    .getMenuList();
+            if (menuList == null){
+                return GetStoreMenuListResponseDto.notExistedMenu();
             }
-            List<MenuEntity> menuList = storeEntity.getMenuList();
-            item = changeImageName(menuList);
         }catch (Exception e){
             e.printStackTrace();
+            return GetStoreMenuListResponseDto.databaseError();
         }
-        return GetStoreMenuListResponseDto.success(item);
+        return GetStoreMenuListResponseDto.success(menuList);
     }
 
     @Override

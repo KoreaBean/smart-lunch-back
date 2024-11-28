@@ -3,6 +3,7 @@ package hello.lunchback.menuManagement.dto.response;
 import hello.lunchback.common.response.ResponseCode;
 import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.common.response.ResponseMessage;
+import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,20 +13,25 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-public class GetStoreMenuListResponseDto {
+public class GetStoreMenuListResponseDto extends ResponseDto{
 
-    public List<GetStoreMenuItem> list = new ArrayList<GetStoreMenuItem>();
+    public List<MenuEntity> list = new ArrayList<>();
 
 
-    public GetStoreMenuListResponseDto(List<GetStoreMenuItem> item) {
-        this.list = item;
+    public GetStoreMenuListResponseDto(List<MenuEntity> menuList) {
+        super(ResponseCode.SUCCESS,ResponseMessage.SUCCESS);
+        this.list = menuList;
 
     }
 
-    public static GetStoreMenuListResponseDto success(List<GetStoreMenuItem> item) {
-        GetStoreMenuListResponseDto result = new GetStoreMenuListResponseDto(item);
-        return result;
+
+    public static ResponseEntity<? super GetStoreMenuListResponseDto> notExistedMenu() {
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_MENU, ResponseMessage.NOT_EXISTED_MENU);
+        return ResponseEntity.status(HttpStatus.NOT_EXTENDED).body(result);
+    }
+
+    public static ResponseEntity<? super GetStoreMenuListResponseDto> success(List<MenuEntity> menuList) {
+        GetStoreMenuListResponseDto result = new GetStoreMenuListResponseDto(menuList);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

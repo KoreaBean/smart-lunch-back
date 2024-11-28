@@ -6,6 +6,7 @@ import hello.lunchback.menuManagement.dto.request.PutStoreMenuDelete;
 import hello.lunchback.menuManagement.dto.response.GetStoreMenuDetailResponseDto;
 import hello.lunchback.menuManagement.dto.response.GetStoreMenuListResponseDto;
 import hello.lunchback.menuManagement.dto.response.PostMenuUpdateResponseDto;
+import org.springframework.http.ResponseEntity;
 
 import java.net.MalformedURLException;
 
@@ -14,7 +15,7 @@ public interface MenuService {
 
     void createMenuData(PostMenuAddRequestDto dto, String email);
 
-    GetStoreMenuListResponseDto getMenuList(String email) throws MalformedURLException;
+    ResponseEntity<? super GetStoreMenuListResponseDto> getMenuList(String email) throws MalformedURLException;
 
     String getImage(String fileName);
 
