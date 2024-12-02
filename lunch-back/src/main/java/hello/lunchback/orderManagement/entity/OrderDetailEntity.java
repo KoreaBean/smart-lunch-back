@@ -1,5 +1,6 @@
 package hello.lunchback.orderManagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
@@ -18,6 +19,7 @@ public class OrderDetailEntity {
     private Integer orderDetailId;
     @ManyToOne()
     @ToString.Exclude
+    @JsonIgnore
     private OrderEntity order;
     private String menuName;
     private Integer menuPrice;

@@ -124,7 +124,10 @@ public class KakaoService {
         OrderNotificationDto orderNotificationDto = new OrderNotificationDto(orderId, orderEntity.getOrderDate(), totalAmount);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonMessage = objectMapper.writeValueAsString(orderNotificationDto);
-        messagingTemplate.convertAndSend("/room/"+3,jsonMessage);
+
+        Integer storeId = orderEntity.getStore().getStoreId();
+
+        messagingTemplate.convertAndSend("/room/"+storeId,jsonMessage);
 
     }
 

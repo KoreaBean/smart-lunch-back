@@ -106,11 +106,12 @@ public class StoreServiceImpl implements StoreService {
             if (!checkStore){
                 return GetStoreOrderDetailResponseDto.notExistedStore();
             }
-            // orderId 찾아서
-            OrderEntity orderEntity = member.getOrderList().stream()
+
+            OrderEntity orderEntity = member.getStore().getOrder().stream()
                     .filter(order -> order.getOrderId().equals(orderId))
                     .findFirst()
                     .orElse(null);
+
             MemberEntity consumer = orderEntity.getMember();
             List<OrderDetailEntity> menuList = orderEntity.getOrderDetail();
             dto.setData(menuList,orderEntity,consumer);

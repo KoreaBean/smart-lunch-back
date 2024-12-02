@@ -175,7 +175,27 @@ public class OrderServiceImpl implements OrderService {
     // 사용자 주문 내역 조회 v2
     @Override
     public ResponseEntity<? super GetOrderHistoryResponseDtoV2> getOrderHistoryV2(String email) {
+        List<Order> orderList = new ArrayList<>();
+        try {
+
+            MemberEntity member = memberRepository.findByMemberEmail(email)
+                    .orElse(null);
+
+            setDto(member);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return GetOrderHistoryResponseDtoV2.databaseError();
+        }
         return  null;
+        //return GetOrderHistoryResponseDtoV2.success();
+    }
+
+    private static void setDto(MemberEntity member) {
+        for (OrderEntity orderEntity : member.getOrderList()) {
+            Order order = new Order(orderEntity);
+        }
     }
 
     // 대기 계산

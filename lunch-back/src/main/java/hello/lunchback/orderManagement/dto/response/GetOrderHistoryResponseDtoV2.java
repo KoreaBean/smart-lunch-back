@@ -1,28 +1,19 @@
 package hello.lunchback.orderManagement.dto.response;
 
+import hello.lunchback.common.response.ResponseCode;
+import hello.lunchback.common.response.ResponseDto;
+import hello.lunchback.common.response.ResponseMessage;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-public class GetOrderHistoryResponseDtoV2 {
-    private Integer orderId;
-    // 주문 날짜
-    private String date;
-    // 가게 이름
-    private String storeName;
-    // ?
-    private String menuSummary;
-    // 갯수
-    private Integer amount;
+public class GetOrderHistoryResponseDtoV2 extends ResponseDto {
 
-    private String orderDate;
-    private String estimatedTime;
-    private String waitingTime;
-    private String crowdLevel;
+    List<Order> orderList = new ArrayList<>();
 
-    private List<OrderItemV2> items = new ArrayList<>();
-    private Long totalPrice;
+    public GetOrderHistoryResponseDtoV2() {
+        super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
 
+    }
 }
