@@ -4,10 +4,12 @@ import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryDetailResponseDto;
 import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDto;
+import hello.lunchback.orderManagement.dto.response.GetOrderHistoryResponseDtoV2;
 import hello.lunchback.orderManagement.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +24,19 @@ public class OrderController {
 
     // 주문 내역 조회
     //@PreAuthorize("hasRole('ROLE_consumer') or hasRole('ROLE_admin')")
-    @GetMapping(value = "/order/history", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GetOrderHistoryResponseDto getOrderHistoryList(@AuthenticationPrincipal String email){
-        GetOrderHistoryResponseDto result = orderService.getOrderHistoryList(email);
-        return result;
-    }
+//    @GetMapping(value = "/order/history", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public GetOrderHistoryResponseDto getOrderHistoryList(@AuthenticationPrincipal String email){
+//        GetOrderHistoryResponseDto result = orderService.getOrderHistoryList(email);
+//        return result;
+//    }
+//
+
+//    // 사용자 주문 내역 조회
+//    @GetMapping("/order/history")
+//    public ResponseEntity<? super GetOrderHistoryResponseDtoV2> orderHistory(@AuthenticationPrincipal String email){
+//        orderService.getOrderHistoryV2(email)
+//    }
+
 
     // 주문 상세 내역 조회
     // 대기 및 혼잡도 계산

@@ -19,6 +19,7 @@ import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
 import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -76,25 +77,21 @@ public class OrderServiceImpl implements OrderService {
             OrderEntity orderEntity = saveOrderInfo(dto, result.store(), result.member());
             // 3. 결제 요청
             kakaopayResponseDto = getKakaopayResponseDto(dto, orderEntity, result, kakaopayResponseDto);
-            // 4. 결제 완료 여부
-            orderEntity.setPay(true);
-            // 5. 상점 대기열에 고객 추가
-            waitingManager.add(storeId,orderEntity.getOrderId());
-            // 6. 알람 전송
-            sendToStoreAlam(dto, orderEntity, result);
+//            // 4. 결제 완료 여부
+//            orderEntity.setPay(true);
+//            // 5. 상점 대기열에 고객 추가
+//            waitingManager.add(storeId,orderEntity.getOrderId());
+//            // 6. 알람 전송
+//            sendToStoreAlam(dto, orderEntity, result);
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
         return kakaopayResponseDto;
     }
 
-    private void sendToStoreAlam(PostOrderRequestDto dto, OrderEntity orderEntity, memberAuthentication result) throws JsonProcessingException {
-        OrderNotificationDto notificationDto = new OrderNotificationDto(orderEntity.getOrderId(), orderEntity.getOrderDate(), dto.getTotalPrice());
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonMessage = objectMapper.writeValueAsString(notificationDto);
-        //messagingTemplate.convertAndSend("/room/"+ result.store().getMember().getMemberId(),jsonMessage);
-        messagingTemplate.convertAndSend("/room/"+1,jsonMessage);
-    }
+
 
     private KakaopayResponseDto getKakaopayResponseDto(PostOrderRequestDto dto, OrderEntity orderEntity, memberAuthentication result, KakaopayResponseDto kakaopayResponseDto) {
         StringBuilder sb = new StringBuilder();
@@ -173,6 +170,12 @@ public class OrderServiceImpl implements OrderService {
 
 
         return GetOrderHistoryDetailResponseDto.success(order,list,totalPrice,busy,myWait,predict);
+    }
+
+    // 사용자 주문 내역 조회 v2
+    @Override
+    public ResponseEntity<? super GetOrderHistoryResponseDtoV2> getOrderHistoryV2(String email) {
+        return  null;
     }
 
     // 대기 계산

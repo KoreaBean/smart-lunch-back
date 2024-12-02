@@ -7,13 +7,13 @@ public class OrderNotificationDto {
 
     private Integer orderId;
     private String orderDate;
-    private Integer totalPrice;
+    private Long totalPrice;
 
 
 
 
 
-    public OrderNotificationDto(Integer orderId, String orderDate, Integer totalPrice) {
+    public OrderNotificationDto(Integer orderId, String orderDate, Long totalPrice) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
