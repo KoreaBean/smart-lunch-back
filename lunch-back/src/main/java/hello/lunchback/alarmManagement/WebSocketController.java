@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class WebSocketController {
 
 
-    @MessageMapping("{memberId}")// 여기로 전송되면 메서드 호출, WebSocketConfig prefixes 에서 적용한건 생략
-    @SendTo("/room/{memberId}")
+    @MessageMapping("/{memberId}")// 여기로 전송되면 메서드 호출, WebSocketConfig prefixes 에서 적용한건 생략
+    @SendTo("/{memberId}")
     public String chat(@DestinationVariable Integer memberId, String message){
         return message;
     }

@@ -2,6 +2,7 @@ package hello.lunchback.orderManagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.login.entity.MemberEntity;
+import hello.lunchback.orderManagement.dto.OrderStatus;
 import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.storeManagement.entity.StoreEntity;
@@ -37,6 +38,8 @@ public class OrderEntity {
     private List<OrderDetailEntity> orderDetail = new ArrayList<>();
     private String orderDate;
     private boolean isPay = false;
+    // 주문 상태
+    private OrderStatus status = OrderStatus.ready;
 
     public OrderEntity(StoreEntity store, PostOrderRequestDto dto,MemberEntity member) {
         this.store = store;

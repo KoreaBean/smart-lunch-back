@@ -2,17 +2,16 @@ package hello.lunchback.storeManagement.service.impl;
 
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
-import hello.lunchback.menuManagement.dto.response.GetStoreMenuListResponseDto;
 import hello.lunchback.menuManagement.entity.MenuEntity;
-import hello.lunchback.storeManagement.dto.response.GetStoreListResponseDto;
-import hello.lunchback.storeManagement.dto.response.GetStoreResponseDto;
-import hello.lunchback.storeManagement.dto.response.MenuInfoItem;
-import hello.lunchback.storeManagement.dto.response.StoreItem;
+import hello.lunchback.orderManagement.entity.OrderDetailEntity;
+import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.storeManagement.dto.response.*;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
 import hello.lunchback.storeManagement.service.StoreService;
 import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,6 +56,106 @@ public class StoreServiceImpl implements StoreService {
         }
 
         return GetStoreListResponseDto.success(list);
+    }
+
+    @Override
+    public ResponseEntity<? super GetStoreOrderResponseDto> storeOrderList(String email) {
+        // 해당 가게의 주문 이력들 조회해서 반환
+        List<OrderEntity> storeOrderList = new ArrayList<>();
+        List<OrderItem> orderItemList = new ArrayList<>();
+        try {
+
+            // 1. 유저 검증
+            MemberEntity member = isCheckMember(email);
+            if (member == null){
+                return GetStoreOrderResponseDto.notExistedUser();
+            }
+            // 2. 식당 검증
+            Boolean checkStore = isCheckStore(member);
+            if (!checkStore){
+                return GetStoreOrderResponseDto.notExistedStore();
+            }
+
+            // 3. 식당 오더 리스트
+            storeOrderList = getStoreOrderList(member);
+            if (storeOrderList == null){
+                return GetStoreOrderResponseDto.notExistedOrderList();
+            }
+            totalPrice(storeOrderList, orderItemList);
+        }catch (Exception e){
+            e.printStackTrace();
+            GetStoreOrderResponseDto.databaseError();
+        }
+        // 4. 리턴
+        //  orderId , 주문 일자, 결제 금액
+        return GetStoreOrderResponseDto.success(orderItemList);
+    }
+
+    @Override
+    public ResponseEntity<? super GetStoreOrderDetailResponseDto> storeOrderDetail(String email, Integer orderId) {
+
+        StoreOrderDetailDto dto = new StoreOrderDetailDto();
+        try {
+            // 1. 유저 검증
+            MemberEntity member = isCheckMember(email);
+            if (member == null){
+                return GetStoreOrderDetailResponseDto.notExistedUser();
+            }
+            // 2. 식당 검증
+            Boolean checkStore = isCheckStore(member);
+            if (!checkStore){
+                return GetStoreOrderDetailResponseDto.notExistedStore();
+            }
+            // orderId 찾아서
+            OrderEntity orderEntity = member.getOrderList().stream()
+                    .filter(order -> order.getOrderId().equals(orderId))
+                    .findFirst()
+                    .orElse(null);
+            MemberEntity consumer = orderEntity.getMember();
+            List<OrderDetailEntity> menuList = orderEntity.getOrderDetail();
+            dto.setData(menuList,orderEntity,consumer);
+        }catch (Exception e){
+            e.printStackTrace();
+            return GetStoreOrderDetailResponseDto.databaseError();
+        }
+        return GetStoreOrderDetailResponseDto.success(dto);
+    }
+
+    private void totalPrice(List<OrderEntity> storeOrderList, List<OrderItem> orderItemList) {
+
+        for (OrderEntity orderEntity : storeOrderList) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrderId(orderEntity.getOrderId());
+            orderItem.setOrderDate(orderEntity.getOrderDate());
+            for (OrderDetailEntity orderDetailEntity : orderEntity.getOrderDetail()) {
+                Integer totalPrice = 0;
+                Integer price = 0;
+                Integer quantity = orderDetailEntity.getQuantity();
+                Integer menuPrice = orderDetailEntity.getMenuPrice();
+                price = quantity * menuPrice;
+                totalPrice = totalPrice + price;
+                orderItem.setTotalPrice(totalPrice);
+            }
+            orderItemList.add(orderItem);
+        }
+    }
+
+    private List<OrderEntity> getStoreOrderList(MemberEntity member) {
+        return member.getStore().getOrder();
+
+    }
+
+    private Boolean isCheckStore(MemberEntity member) {
+        StoreEntity store = member.getStore();
+        if (store == null){
+            return false;
+        }
+        return true;
+    }
+
+    private MemberEntity isCheckMember(String email) {
+        return memberRepository.findByMemberEmail(email)
+                .orElse(null);
     }
 
 }

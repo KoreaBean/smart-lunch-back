@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class GetStoreResponseDto {
 
-    private final List<StoreItem> list = new ArrayList<>();
+    private List<StoreItem> list = new ArrayList<>();
 
 
 

@@ -1,5 +1,7 @@
 package hello.lunchback.orderManagement.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.external.kakaoPay.KakaoService;
 import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
@@ -66,35 +68,62 @@ public class OrderServiceImpl implements OrderService {
         MemberEntity member = new MemberEntity();
         StoreEntity store = new StoreEntity();
         KakaopayResponseDto kakaopayResponseDto = new KakaopayResponseDto();
+
         try {
-            // 멤버 조회 하고
-            member = memberRepository.findByMemberEmail(email)
-                    .orElse(null);
-            if (member == null){
-                PostOrderResponseDto.notExistedUser();
-            }
-            store = storeRepository.findByStoreId(storeId)
-                    .orElse(null);
-            OrderEntity orderEntity = saveOrderInfo(dto, store, member);
-
-            StringBuilder sb = new StringBuilder();
-            Integer quantity = 0;
-            for (MenuListItem menuListItem : dto.getList()) {
-                    sb.append(menuListItem.getMenuName());
-                    quantity = quantity + menuListItem.getQuantity();
-            }
-            KakaopayRequestDto kakaopayRequestDto = getKakaopayRequestDto(dto, orderEntity, member, sb, quantity);
-
-            kakaopayResponseDto = kakaoService.requestPayment(kakaopayRequestDto);
+            // 1. 멤버 검증
+            memberAuthentication result = getMemberAuthentication(storeId, email);
+            // 2. orderEntity, orderDetailEntity 생성
+            OrderEntity orderEntity = saveOrderInfo(dto, result.store(), result.member());
+            // 3. 결제 요청
+            kakaopayResponseDto = getKakaopayResponseDto(dto, orderEntity, result, kakaopayResponseDto);
+            // 4. 결제 완료 여부
             orderEntity.setPay(true);
-            orderRepository.save(orderEntity);
+            // 5. 상점 대기열에 고객 추가
             waitingManager.add(storeId,orderEntity.getOrderId());
-            String message = "새로운 주문이 도착했습니다.";
-            messagingTemplate.convertAndSend("/room/"+ store.getMember().getMemberId(),message);
+            // 6. 알람 전송
+            sendToStoreAlam(dto, orderEntity, result);
         }catch (Exception e){
             e.printStackTrace();
         }
         return kakaopayResponseDto;
+    }
+
+    private void sendToStoreAlam(PostOrderRequestDto dto, OrderEntity orderEntity, memberAuthentication result) throws JsonProcessingException {
+        OrderNotificationDto notificationDto = new OrderNotificationDto(orderEntity.getOrderId(), orderEntity.getOrderDate(), dto.getTotalPrice());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonMessage = objectMapper.writeValueAsString(notificationDto);
+        //messagingTemplate.convertAndSend("/room/"+ result.store().getMember().getMemberId(),jsonMessage);
+        messagingTemplate.convertAndSend("/room/"+1,jsonMessage);
+    }
+
+    private KakaopayResponseDto getKakaopayResponseDto(PostOrderRequestDto dto, OrderEntity orderEntity, memberAuthentication result, KakaopayResponseDto kakaopayResponseDto) {
+        StringBuilder sb = new StringBuilder();
+        Integer quantity = 0;
+        for (MenuListItem menuListItem : dto.getList()) {
+                sb.append(menuListItem.getMenuName());
+                quantity = quantity + menuListItem.getQuantity();
+        }
+        KakaopayRequestDto kakaopayRequestDto = getKakaopayRequestDto(dto, orderEntity, result.member(), sb, quantity);
+
+        kakaopayResponseDto = kakaoService.requestPayment(kakaopayRequestDto);
+        return kakaopayResponseDto;
+    }
+
+    private memberAuthentication getMemberAuthentication(Integer storeId, String email) {
+        StoreEntity store;
+        MemberEntity member;
+        member = memberRepository.findByMemberEmail(email)
+                .orElse(null);
+        if (member == null){
+            PostOrderResponseDto.notExistedUser();
+        }
+        store = storeRepository.findByStoreId(storeId)
+                .orElse(null);
+        memberAuthentication result = new memberAuthentication(member, store);
+        return result;
+    }
+
+    private record memberAuthentication(MemberEntity member, StoreEntity store) {
     }
 
     // 결제 요청

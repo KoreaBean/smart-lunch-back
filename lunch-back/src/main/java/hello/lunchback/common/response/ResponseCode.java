@@ -22,4 +22,5 @@ public interface ResponseCode {
 
     //http status 500
     String DATABASE_ERROR = "DBE";
+    String NOT_EXISTED_ORDER_LIST ="NOL";
 }

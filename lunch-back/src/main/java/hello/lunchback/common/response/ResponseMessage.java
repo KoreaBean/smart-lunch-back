@@ -13,6 +13,7 @@ public interface ResponseMessage {
     String NOT_EXISTED_USER = "NOT_EXISTED_USER";
     String NOT_EXISTED_BOARD = "NOT_EXISTED_BOARD";
     String NOT_EXISTED_MENU = "NOT_EXISTED_MENU";
+    String NOT_EXISTED_STORE = "NOT_EXISTED_STORE";
     // http status 401
     String SIGN_IN_FAIL = "SIGN_IN_FAIL";
     String AUTHORIZATION_FAIL = "UTHORIZATION_FAIL";
@@ -22,5 +23,6 @@ public interface ResponseMessage {
 
     //http status 500
     String DATABASE_ERROR = "DATABASE_ERROR";
+    String NOT_EXISTED_ORDER_LIST = "NOT_EXISTED_ORDER_LIST";
 
 }
