@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,7 +81,7 @@ public class LoginServiceImpl implements LoginService {
     // 회원가입
     @Override
     @Transactional
-    public PostJoinResponseDto join(PostJoinRequestDto dto) {
+    public ResponseEntity<? super PostJoinResponseDto> join(PostJoinRequestDto dto) {
         log.info("LoginServiceImpl : join : start");
         MemberEntity member = new MemberEntity();
         RoleEntity role = new RoleEntity();
@@ -89,6 +90,7 @@ public class LoginServiceImpl implements LoginService {
             Boolean isDuplicated = duplicatedEmail(dto);
             if (isDuplicated){
                 log.info("LoginServiceImpl : join : isDuplicated : True");
+                return PostJoinResponseDto.duplicatedEmail();
             }
              role = roleRepository.findByRoleName(RoleType.consumer.toString());
 
@@ -140,8 +142,10 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private Boolean duplicatedEmail(PostJoinRequestDto dto) {
-        Optional<MemberEntity> memberEntity = memberRepository.findByMemberEmail(dto.getEmail());
-        if (memberEntity.isEmpty()){
+        MemberEntity member = memberRepository.findByMemberEmail(dto.getEmail())
+                .orElse(null);
+
+        if (member == null) {
             return false;
         }
         return true;

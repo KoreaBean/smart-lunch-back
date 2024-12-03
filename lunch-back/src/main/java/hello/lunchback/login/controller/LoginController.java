@@ -9,6 +9,7 @@ import hello.lunchback.login.dto.response.LoginResponse;
 import hello.lunchback.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,9 @@ public class LoginController {
         return login;
     }
     // 회원 가입
-    @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostJoinResponseDto join(@RequestBody PostJoinRequestDto dto){
-        PostJoinResponseDto join = loginService.join(dto);
+    @PostMapping(value = "/join")
+    public ResponseEntity<? super PostJoinResponseDto> join(@RequestBody PostJoinRequestDto dto){
+        ResponseEntity<? super PostJoinResponseDto> join = loginService.join(dto);
         return join;
     }
 

@@ -9,19 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Data
-@NoArgsConstructor
-public class PostJoinResponseDto {
+public class PostJoinResponseDto extends ResponseDto{
 
-    private String code;
-
-    public PostJoinResponseDto(String code)
-    {
-        this.code = code;
+    public PostJoinResponseDto() {
+        super(ResponseCode.SUCCESS,ResponseMessage.SUCCESS);
     }
 
-    public static PostJoinResponseDto success(){
-        PostJoinResponseDto result = new PostJoinResponseDto("SU");
-        return result;
+    public static ResponseEntity<? super PostJoinResponseDto> success(){
+        PostJoinResponseDto result = new PostJoinResponseDto();
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    public static ResponseEntity<? super PostJoinResponseDto> duplicatedEmail() {
+        ResponseDto result = new ResponseDto(ResponseCode.DUPLICATE_EMAIL, ResponseMessage.DUPLICATE_EMAIL);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
 }
