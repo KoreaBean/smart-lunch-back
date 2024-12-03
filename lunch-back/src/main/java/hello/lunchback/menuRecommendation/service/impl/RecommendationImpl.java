@@ -44,10 +44,13 @@ public class RecommendationImpl implements RecommendationService {
             List<OrderDetailEntity> list = new ArrayList<>();
             // 일주일 내 데이터 뽑아오기
             Boolean isCheck = getListWeek(member, list);
+            if (isCheck){
+                // 비교 후 동일한 메뉴이름은 제거
+                deleteDuplicatedMenu(allMenu, list);
+            }
             // 모든 메뉴 뽑아오기
             List<MenuEntity> all = menuRepository.findAll();
-            // 비교 후 동일한 메뉴이름은 제거
-            deleteDuplicatedMenu(allMenu, list);
+
 
             for (MenuEntity menu : all) {
                 String menuImg = fileUrl + menu.getMenuImage();

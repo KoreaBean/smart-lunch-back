@@ -46,47 +46,47 @@ insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, me
 insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (6,20,50,30,0,'6메뉴 설명','이미지.png','메뉴 6','8000',40,3);
 
 
-
-
-DELIMITER $$
-
-DROP PROCEDURE IF EXISTS GenerateOrderData;
-CREATE PROCEDURE GenerateOrderData(IN total_orders INT)
-BEGIN
-    DECLARE i INT DEFAULT 1;
-    DECLARE last_order_id INT;
-    DECLARE random_limit INT;
-
-    WHILE i <= total_orders DO
-            -- order_entity 데이터 삽입
-            INSERT INTO order_entity (member_member_id, store_store_id, order_date, is_pay)
-            VALUES (
-                       FLOOR(1 + (RAND() * 6)), -- member_id는 1~6 사이 랜덤 값
-                       FLOOR(1 + (RAND() * 3)), -- store_id는 1~3 사이 랜덤 값
-                       DATE_ADD(CURDATE(), INTERVAL FLOOR(RAND() * 30) DAY), -- 현재 날짜 기준으로 0~30일 사이 랜덤
-                       IF(RAND() > 0.5, TRUE, FALSE) -- is_pay는 TRUE/FALSE 랜덤 값
-                   );
-
-            -- 최근 생성된 order_entity의 ID 가져오기
-            SET last_order_id = LAST_INSERT_ID();
-
-            -- 랜덤 LIMIT 값을 계산
-            SET random_limit = FLOOR(1 + (RAND() * 5)); -- 1~5 사이 랜덤 값
-
-            -- 각 order_entity에 대해 order_detail 1~5개 랜덤 삽입
-            INSERT INTO order_detail (order_order_id, menu_name, menu_price, quantity)
-            SELECT
-                last_order_id,
-                CONCAT('메뉴 ', FLOOR(1 + (RAND() * 6))), -- menu_name
-                FLOOR(1000 + (RAND() * 10000)), -- menu_price
-                FLOOR(1 + (RAND() * 5)) -- quantity
-            FROM (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) temp
-            LIMIT random_limit; -- 사전에 계산된 변수 사용
-
-            SET i = i + 1;
-        END WHILE;
-END$$
-
-DELIMITER ;
-
-CALL GenerateOrderData(1000); -- 1000개의 주문 데이터 생성
+#
+#
+# DELIMITER $$
+#
+# DROP PROCEDURE IF EXISTS GenerateOrderData;
+# CREATE PROCEDURE GenerateOrderData(IN total_orders INT)
+# BEGIN
+#     DECLARE i INT DEFAULT 1;
+#     DECLARE last_order_id INT;
+#     DECLARE random_limit INT;
+#
+#     WHILE i <= total_orders DO
+#             -- order_entity 데이터 삽입
+#             INSERT INTO order_entity (member_member_id, store_store_id, order_date, is_pay)
+#             VALUES (
+#                        FLOOR(1 + (RAND() * 6)), -- member_id는 1~6 사이 랜덤 값
+#                        FLOOR(1 + (RAND() * 3)), -- store_id는 1~3 사이 랜덤 값
+#                        DATE_ADD(CURDATE(), INTERVAL FLOOR(RAND() * 30) DAY), -- 현재 날짜 기준으로 0~30일 사이 랜덤
+#                        IF(RAND() > 0.5, TRUE, FALSE) -- is_pay는 TRUE/FALSE 랜덤 값
+#                    );
+#
+#             -- 최근 생성된 order_entity의 ID 가져오기
+#             SET last_order_id = LAST_INSERT_ID();
+#
+#             -- 랜덤 LIMIT 값을 계산
+#             SET random_limit = FLOOR(1 + (RAND() * 5)); -- 1~5 사이 랜덤 값
+#
+#             -- 각 order_entity에 대해 order_detail 1~5개 랜덤 삽입
+#             INSERT INTO order_detail (order_order_id, menu_name, menu_price, quantity)
+#             SELECT
+#                 last_order_id,
+#                 CONCAT('메뉴 ', FLOOR(1 + (RAND() * 6))), -- menu_name
+#                 FLOOR(1000 + (RAND() * 10000)), -- menu_price
+#                 FLOOR(1 + (RAND() * 5)) -- quantity
+#             FROM (SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) temp
+#             LIMIT random_limit; -- 사전에 계산된 변수 사용
+#
+#             SET i = i + 1;
+#         END WHILE;
+# END$$
+#
+# DELIMITER ;
+#
+# CALL GenerateOrderData(1000); -- 1000개의 주문 데이터 생성
