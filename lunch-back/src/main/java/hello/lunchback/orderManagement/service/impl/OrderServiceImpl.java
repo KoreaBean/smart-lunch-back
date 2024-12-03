@@ -1,8 +1,5 @@
 package hello.lunchback.orderManagement.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.external.kakaoPay.KakaoService;
 import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
@@ -13,15 +10,16 @@ import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.*;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.orderManagement.repository.OrderDetailRepository;
 import hello.lunchback.orderManagement.repository.OrderRepository;
 import hello.lunchback.orderManagement.service.OrderService;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
 import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +30,16 @@ import java.util.*;
 public class OrderServiceImpl implements OrderService {
 
     private final WaitingManager waitingManager;
-
-
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
     private final KakaoService kakaoService;
     private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final SimpMessagingTemplate messagingTemplate;
+
+    @Value("${file.fileUrl}")
+    private String fileUrl;
+
 
     // 주문 내역 조회
     @Override
@@ -69,7 +70,6 @@ public class OrderServiceImpl implements OrderService {
         MemberEntity member = new MemberEntity();
         StoreEntity store = new StoreEntity();
         KakaopayResponseDto kakaopayResponseDto = new KakaopayResponseDto();
-
         try {
             // 1. 멤버 검증
             memberAuthentication result = getMemberAuthentication(storeId, email);
@@ -77,21 +77,12 @@ public class OrderServiceImpl implements OrderService {
             OrderEntity orderEntity = saveOrderInfo(dto, result.store(), result.member());
             // 3. 결제 요청
             kakaopayResponseDto = getKakaopayResponseDto(dto, orderEntity, result, kakaopayResponseDto);
-//            // 4. 결제 완료 여부
-//            orderEntity.setPay(true);
-//            // 5. 상점 대기열에 고객 추가
-//            waitingManager.add(storeId,orderEntity.getOrderId());
-//            // 6. 알람 전송
-//            sendToStoreAlam(dto, orderEntity, result);
-
 
         }catch (Exception e){
             e.printStackTrace();
         }
         return kakaopayResponseDto;
     }
-
-
 
     private KakaopayResponseDto getKakaopayResponseDto(PostOrderRequestDto dto, OrderEntity orderEntity, memberAuthentication result, KakaopayResponseDto kakaopayResponseDto) {
         StringBuilder sb = new StringBuilder();
@@ -174,27 +165,41 @@ public class OrderServiceImpl implements OrderService {
 
     // 사용자 주문 내역 조회 v2
     @Override
+    @Transactional
     public ResponseEntity<? super GetOrderHistoryResponseDtoV2> getOrderHistoryV2(String email) {
         List<Order> orderList = new ArrayList<>();
         try {
 
             MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
-
-            setDto(member);
-
-
+            mappingData(member, orderList);
         }catch (Exception e){
             e.printStackTrace();
             return GetOrderHistoryResponseDtoV2.databaseError();
         }
-        return  null;
-        //return GetOrderHistoryResponseDtoV2.success();
+
+        return GetOrderHistoryResponseDtoV2.success(orderList);
     }
 
-    private static void setDto(MemberEntity member) {
+    private void mappingData(MemberEntity member, List<Order> orderList) {
         for (OrderEntity orderEntity : member.getOrderList()) {
-            Order order = new Order(orderEntity);
+            String storeImg = fileUrl + orderEntity.getStore().getStoreImage();
+            // 내 순서
+            Integer myWait = waitingManager.findUser(orderEntity.getStore().getStoreId(), orderEntity.getOrderId());
+            // 예상 시간
+            String waitingTime = predictTime(myWait);
+            // 혼잡도
+            String busy = isBusy(orderEntity);
+            List<OrderItemV2> items = new ArrayList<>();
+            Long totalPrice = 0L;
+            for (OrderDetailEntity orderDetailEntity : orderDetailRepository.findByOrderOrderId(orderEntity.getOrderId())) {
+                OrderItemV2 item = new OrderItemV2(orderDetailEntity);
+                items.add(item);
+                int price = orderDetailEntity.getMenuPrice() * orderDetailEntity.getQuantity();
+                totalPrice = totalPrice + price;
+            }
+            Order order = new Order(orderEntity, storeImg,myWait,waitingTime,busy, totalPrice,items);
+            orderList.add(order);
         }
     }
 

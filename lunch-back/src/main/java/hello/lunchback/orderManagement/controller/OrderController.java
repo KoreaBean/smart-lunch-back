@@ -31,11 +31,12 @@ public class OrderController {
 //    }
 //
 
-//    // 사용자 주문 내역 조회
-//    @GetMapping("/order/history")
-//    public ResponseEntity<? super GetOrderHistoryResponseDtoV2> orderHistory(@AuthenticationPrincipal String email){
-//        orderService.getOrderHistoryV2(email)
-//    }
+    // 사용자 주문 내역 조회
+    @GetMapping("/order/history")
+    public ResponseEntity<? super GetOrderHistoryResponseDtoV2> orderHistory(@AuthenticationPrincipal String email){
+        ResponseEntity<? super GetOrderHistoryResponseDtoV2> result = orderService.getOrderHistoryV2(email);
+        return result;
+    }
 
 
     // 주문 상세 내역 조회

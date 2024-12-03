@@ -3,6 +3,7 @@ package hello.lunchback.storeManagement.service.impl;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.menuManagement.entity.MenuEntity;
+import hello.lunchback.orderManagement.dto.OrderStatus;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.storeManagement.dto.response.*;
@@ -11,8 +12,10 @@ import hello.lunchback.storeManagement.repository.StoreRepository;
 import hello.lunchback.storeManagement.service.StoreService;
 import hello.lunchback.waitManagement.WaitingManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final WaitingManager waitingManager;
 
+    @Value("${file.fileUrl}")
+    private String fileUrl;
     @Override
     public GetStoreResponseDto storeList(String email) {
         List<StoreEntity> all = storeRepository.findAll();
@@ -51,7 +56,9 @@ public class StoreServiceImpl implements StoreService {
                 .orElse(null);
         List<MenuInfoItem> list = new ArrayList<>();
         for (MenuEntity menuEntity : storeEntity.getMenuList()) {
-            MenuInfoItem menuInfoItem = new MenuInfoItem(menuEntity);
+            String menuImg = fileUrl + menuEntity.getMenuImage();
+            MenuInfoItem menuInfoItem = new MenuInfoItem(menuEntity,menuImg);
+
             list.add(menuInfoItem);
         }
 
@@ -122,12 +129,34 @@ public class StoreServiceImpl implements StoreService {
         return GetStoreOrderDetailResponseDto.success(dto);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<? super DeleteStoreOrderResponseDto> orderDelete(String email, Integer orderId) {
+
+        try {
+            MemberEntity member = memberRepository.findByMemberEmail(email)
+                    .orElse(null);
+            StoreEntity store = member.getStore();
+            OrderEntity orderEntity = store.getOrder().stream()
+                    .filter(order -> order.getOrderId().equals(orderId))
+                    .findFirst()
+                    .orElse(null);
+            orderEntity.setStatus(OrderStatus.cancel);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return DeleteStoreOrderResponseDto.databaseError();
+        }
+        return DeleteStoreOrderResponseDto.success();
+    }
+
     private void totalPrice(List<OrderEntity> storeOrderList, List<OrderItem> orderItemList) {
 
         for (OrderEntity orderEntity : storeOrderList) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrderId(orderEntity.getOrderId());
             orderItem.setOrderDate(orderEntity.getOrderDate());
+            orderItem.setStatus(orderEntity.getStatus());
             for (OrderDetailEntity orderDetailEntity : orderEntity.getOrderDetail()) {
                 Integer totalPrice = 0;
                 Integer price = 0;

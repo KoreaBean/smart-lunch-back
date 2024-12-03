@@ -1,10 +1,7 @@
 package hello.lunchback.storeManagement.service;
 
 import hello.lunchback.menuManagement.dto.response.GetStoreMenuListResponseDto;
-import hello.lunchback.storeManagement.dto.response.GetStoreListResponseDto;
-import hello.lunchback.storeManagement.dto.response.GetStoreOrderDetailResponseDto;
-import hello.lunchback.storeManagement.dto.response.GetStoreOrderResponseDto;
-import hello.lunchback.storeManagement.dto.response.GetStoreResponseDto;
+import hello.lunchback.storeManagement.dto.response.*;
 import org.springframework.http.ResponseEntity;
 
 public interface StoreService {
@@ -16,4 +13,6 @@ public interface StoreService {
     ResponseEntity<? super GetStoreOrderResponseDto> storeOrderList(String email);
 
     ResponseEntity<? super GetStoreOrderDetailResponseDto> storeOrderDetail(String email, Integer orderId);
+
+    ResponseEntity<? super DeleteStoreOrderResponseDto> orderDelete(String email, Integer orderId);
 }

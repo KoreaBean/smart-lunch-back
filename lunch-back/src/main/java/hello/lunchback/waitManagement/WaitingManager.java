@@ -37,6 +37,7 @@ public class WaitingManager {
         return deque.size();
     }
 
+    //내 순서
     public Integer findUser(Integer storeId, Integer orderId){
         Integer wait = 0;
         Deque<Integer> deque = waiting.get(storeId);
