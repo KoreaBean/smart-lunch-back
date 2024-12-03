@@ -6,12 +6,15 @@ import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.menuManagement.repository.MenuRepository;
 import hello.lunchback.menuRecommendation.dto.response.GetRecommendationResponseDto;
+import hello.lunchback.menuRecommendation.dto.response.MenuEntityDto;
+import hello.lunchback.menuRecommendation.dto.response.MenuRecommendation;
 import hello.lunchback.menuRecommendation.service.RecommendationService;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.orderManagement.repository.OrderDetailRepository;
 import hello.lunchback.orderManagement.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecommendationImpl implements RecommendationService {
 
+    @Value("${file.fileUrl}")
+    private String fileUrl;
+
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final MenuRepository menuRepository;
@@ -31,7 +37,7 @@ public class RecommendationImpl implements RecommendationService {
     public ResponseEntity<? super  GetRecommendationResponseDto> findMenu(String email) {
         // 모든 메뉴 중 , 사용자가 일주일 내 주문하지 않은 메뉴 들 List로 반출
         // sql 튜닝 -> order_entity , idx_order_date
-        List<MenuEntity> allMenu = new ArrayList<>();
+        List<MenuRecommendation> allMenu = new ArrayList<>();
         try {
             MemberEntity member = memberRepository.findByMemberEmail(email)
                     .orElse(null);
@@ -39,9 +45,15 @@ public class RecommendationImpl implements RecommendationService {
             // 일주일 내 데이터 뽑아오기
             Boolean isCheck = getListWeek(member, list);
             // 모든 메뉴 뽑아오기
-            allMenu = menuRepository.findAll();
+            List<MenuEntity> all = menuRepository.findAll();
             // 비교 후 동일한 메뉴이름은 제거
             deleteDuplicatedMenu(allMenu, list);
+
+            for (MenuEntity menu : all) {
+                String menuImg = fileUrl + menu.getMenuImage();
+                MenuRecommendation menuRecommendation = new MenuRecommendation(menu, menuImg);
+                allMenu.add(menuRecommendation);
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -50,7 +62,7 @@ public class RecommendationImpl implements RecommendationService {
         return GetRecommendationResponseDto.success(allMenu);
     }
 
-    private static void deleteDuplicatedMenu(List<MenuEntity> allMenu, List<OrderDetailEntity> list) {
+    private static void deleteDuplicatedMenu(List<MenuRecommendation> allMenu, List<OrderDetailEntity> list) {
         allMenu.removeIf(menu ->
                 list.stream().anyMatch(orderDetail -> menu.getMenuName().equals(orderDetail.getMenuName()))
         );
