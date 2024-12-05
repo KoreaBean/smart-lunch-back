@@ -1,4 +1,53 @@
+
 spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/lunch
+    username: root
+    password: gosemvhs1!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
+  mvc:
+    contentnegotiation:
+      favor-path-extension: false
+      favor-parameter: false
+      media-types.json: application/json
+
+jwt:
+  secret_key: lunchProjectSecretkeypleaserightworkingJwtprojectiwishyouplese
+
+
+logging.level.web: DEBUG
+
+file:
+  local-filePath: test
+  local-fileUrl: test
+
+kakaopay:
+  client_id: 495991519813E5C75502
+  client_secret: F64956B0C80DAF856770
+  secret_key: F64956B0C80DAF856770
+  secret_key_dev: DEV278FC6A197DD5A89664291D5BDC43B847776C
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: default
   datasource:
     url: jdbc:mysql://localhost:3306/lunch
     username: root

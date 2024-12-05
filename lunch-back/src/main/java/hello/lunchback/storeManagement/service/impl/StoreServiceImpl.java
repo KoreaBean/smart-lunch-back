@@ -2,10 +2,13 @@ package hello.lunchback.storeManagement.service.impl;
 
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
+import hello.lunchback.menuManagement.entity.FileEntity;
 import hello.lunchback.menuManagement.entity.MenuEntity;
+import hello.lunchback.menuManagement.repository.FileRepository;
 import hello.lunchback.orderManagement.dto.OrderStatus;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.storeManagement.dto.request.PostStoreCreateRequestDto;
 import hello.lunchback.storeManagement.dto.response.*;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import hello.lunchback.storeManagement.repository.StoreRepository;
@@ -16,9 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +33,14 @@ public class StoreServiceImpl implements StoreService {
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
     private final WaitingManager waitingManager;
+    private final FileRepository fileRepository;
 
     @Value("${file.fileUrl}")
     private String fileUrl;
+    @Value("${file.filePath}")
+    private String filePath;
+
+
     @Override
     public GetStoreResponseDto storeList(String email) {
         List<StoreEntity> all = storeRepository.findAll();
@@ -149,6 +160,46 @@ public class StoreServiceImpl implements StoreService {
         }
         return DeleteStoreOrderResponseDto.success();
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<? super PostStoreCreateResponseDto> storeCreate(String email, PostStoreCreateRequestDto dto) {
+
+        try {
+            MemberEntity member = memberRepository.findByMemberEmail(email)
+                    .orElse(null);
+            if (member == null){
+                return PostStoreCreateResponseDto.notExistedUser();
+            }
+            String uuidfilename = transImageName(dto);
+            member.setStore(dto,uuidfilename);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return PostStoreCreateResponseDto.databaseError();
+        }
+        return PostStoreCreateResponseDto.success();
+    }
+
+    private String transImageName(PostStoreCreateRequestDto dto) {
+
+
+            // 1. 확장자 추출
+            MultipartFile storeImg = dto.getStoreImg();
+            String originalFilename = storeImg.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String uuidFilename = UUID.randomUUID() + extension;
+            String saveFile = filePath + uuidFilename;
+            try {
+                storeImg.transferTo(new File(saveFile));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        fileRepository.save(new FileEntity(uuidFilename,originalFilename));
+        return uuidFilename;
+
+    }
+
 
     private void totalPrice(List<OrderEntity> storeOrderList, List<OrderItem> orderItemList) {
 

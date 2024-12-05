@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.storeManagement.dto.request.PostStoreCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Entity(name = "store")
 @Data
+@NoArgsConstructor
 public class StoreEntity {
 
     @Id
@@ -31,4 +34,11 @@ public class StoreEntity {
     @OneToMany(mappedBy = "store", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderEntity> order = new ArrayList<>();
 
+    public StoreEntity(PostStoreCreateRequestDto dto, String uuidFilename, MemberEntity member) {
+        this.businessNumber = dto.getBusinessNumber();
+        this.storeName = dto.getStoreName();
+        this.storeDescription = dto.getStoreDescription();
+        this.storeImage = uuidFilename;
+        this.member = member;
+    }
 }

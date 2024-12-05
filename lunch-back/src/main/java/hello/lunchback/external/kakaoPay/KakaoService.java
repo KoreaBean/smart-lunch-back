@@ -8,6 +8,7 @@ import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopaySuccessResponseDto;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
+import hello.lunchback.orderManagement.dto.OrderStatus;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.OrderNotificationDto;
 import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
@@ -103,7 +104,7 @@ public class KakaoService {
                 orderEntity.setPay(true);
                 waitingManager.add(orderEntity.getStore().getStoreId(),orderEntity.getOrderId());
                 Long totalPrice = setTotalPrice(orderEntity);
-                sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice);
+                sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice,orderEntity.getStatus());
 
             }
         }catch (Exception e){
@@ -120,8 +121,8 @@ public class KakaoService {
                 .sum();
     }
 
-    private void sendToStoreAlam(Integer orderId, OrderEntity orderEntity, Long totalAmount) throws JsonProcessingException {
-        OrderNotificationDto orderNotificationDto = new OrderNotificationDto(orderId, orderEntity.getOrderDate(), totalAmount);
+    private void sendToStoreAlam(Integer orderId, OrderEntity orderEntity, Long totalAmount, OrderStatus status) throws JsonProcessingException {
+        OrderNotificationDto orderNotificationDto = new OrderNotificationDto(orderId, orderEntity.getOrderDate(), totalAmount, status);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonMessage = objectMapper.writeValueAsString(orderNotificationDto);
 

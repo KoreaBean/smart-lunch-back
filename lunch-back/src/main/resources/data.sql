@@ -3,17 +3,17 @@
 -- 테이블 새로 만들 시 한번 실행
 
 -- Role 데이터 삽입
-insert into roles(role_id, role_description, role_name) value
+insert into roles(role_id, role_description, role_name) values
                       (1, '관리자','admin'),
                       (2, '식당','restaurant'),
                       (3,'소비자','consumer');
 
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(1,'store1@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(2,'store2@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(3,'store3@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(4,'test1@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(5,'test2@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
-insert into member(member_id,member_email,member_name,member_password,member_phone) value(6,'test3@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(1,'store1@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(2,'store2@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(3,'store3@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(4,'test1@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(5,'test2@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
+insert into member(member_id,member_email,member_name,member_password,member_phone) values(6,'test3@naver.com','김상균','$2a$10$QCFGPPyzISFkwVI8JfwJJO7JlnHZQGHqpBCCYqhIP.Lg5AYLN2vRS','010-7234-0646');
 
 
 insert into member_roles values
@@ -37,13 +37,13 @@ insert into store(store_id, business_number, store_description, store_image, sto
 insert into store(store_id, business_number, store_description, store_image, store_name, member_member_id) values (3,'111-111','3번 스토어 설명','이미지','3번 스토어 이름',3);
 
 -- menu 데이터 삽입
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (1,10,20,30,0,'1메뉴 설명','이미지.png','메뉴 1','3000',40,1);
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (2,10,20,30,0,'2메뉴 설명','이미지.png','메뉴 2','4000',40,1);
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (3,10,20,30,0,'3메뉴 설명','이미지.png','메뉴 3','5000',40,1);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (1,10,20,30,0,'1메뉴 설명','이미지.png','메뉴 1','3000',40,1);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (2,10,20,30,0,'2메뉴 설명','이미지.png','메뉴 2','4000',40,1);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (3,10,20,30,0,'3메뉴 설명','이미지.png','메뉴 3','5000',40,1);
 
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (4,20,30,30,0,'4메뉴 설명','이미지.png','메뉴 4','6000',40,2);
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (5,20,40,30,0,'5메뉴 설명','이미지.png','메뉴 5','7000',40,2);
-insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUE (6,20,50,30,0,'6메뉴 설명','이미지.png','메뉴 6','8000',40,3);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (4,20,30,30,0,'4메뉴 설명','이미지.png','메뉴 4','6000',40,2);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (5,20,40,30,0,'5메뉴 설명','이미지.png','메뉴 5','7000',40,2);
+insert into menu(menu_id, calorie, carbs, fat, is_sold_out, menu_description, menu_image, menu_name, menu_price, protein, store_store_id) VALUEs (6,20,50,30,0,'6메뉴 설명','이미지.png','메뉴 6','8000',40,3);
 
 
 #

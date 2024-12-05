@@ -5,6 +5,7 @@ import hello.lunchback.login.dto.request.PostJoinRequestDto;
 import hello.lunchback.login.dto.request.PutMemberUpdateRequestDto;
 import hello.lunchback.login.dto.response.PostJoinResponseDto;
 import hello.lunchback.orderManagement.entity.OrderEntity;
+import hello.lunchback.storeManagement.dto.request.PostStoreCreateRequestDto;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -61,4 +62,8 @@ public class MemberEntity {
     }
 
 
+    public void setStore(PostStoreCreateRequestDto dto, String uuidFilename) {
+        this.store = new StoreEntity(dto, uuidFilename, this);
+
+    }
 }

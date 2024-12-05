@@ -1,15 +1,13 @@
 package hello.lunchback.storeManagement.controller;
 
+import hello.lunchback.storeManagement.dto.request.PostStoreCreateRequestDto;
 import hello.lunchback.storeManagement.dto.response.*;
 import hello.lunchback.storeManagement.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +46,11 @@ public class StoreController {
     @DeleteMapping("/store/order/{orderId}")
     public ResponseEntity<? super DeleteStoreOrderResponseDto> orderDelete(@AuthenticationPrincipal String email, @PathVariable(name = "orderId") Integer orderId){
         ResponseEntity<? super DeleteStoreOrderResponseDto> result = storeService.orderDelete(email, orderId);
+        return result;
+    }
+    @PostMapping("/store/create")
+    public ResponseEntity<? super PostStoreCreateResponseDto> storeCreate(@AuthenticationPrincipal String email, @ModelAttribute PostStoreCreateRequestDto dto){
+        ResponseEntity<? super PostStoreCreateResponseDto> result = storeService.storeCreate(email, dto);
         return result;
     }
 
