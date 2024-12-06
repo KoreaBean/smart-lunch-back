@@ -32,8 +32,8 @@ jwt:
 logging.level.web: DEBUG
 
 file:
-  local-filePath: test
-  local-fileUrl: test
+  filePath: test
+  fileUrl: test
 
 kakaopay:
   client_id: 495991519813E5C75502

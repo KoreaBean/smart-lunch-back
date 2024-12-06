@@ -16,6 +16,7 @@ import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.orderManagement.repository.OrderRepository;
 import hello.lunchback.orderManagement.service.impl.OrderServiceImpl;
 import hello.lunchback.waitManagement.WaitingManager;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -87,7 +89,7 @@ public class KakaoService {
     }
 
     @Transactional
-    public PostOrderResponseDto success(String token) {
+    public void success(String token, HttpServletResponse response) throws IOException {
         try {
             for (String userId : list.keySet()) {
                 KakaopaySuccessRequestDto request = new KakaopaySuccessRequestDto(token,list.get(userId));
@@ -110,7 +112,7 @@ public class KakaoService {
         }catch (Exception e){
          e.printStackTrace();
      }
-     return PostOrderResponseDto.success();
+        response.sendRedirect("http://localhost:8080/order/history");
     }
 
     private Long setTotalPrice(OrderEntity orderEntity) {
