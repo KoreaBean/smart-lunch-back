@@ -24,9 +24,6 @@ spring:
       favor-path-extension: false
       favor-parameter: false
       media-types.json: application/json
-  sql:
-    init:
-      mode: always
 
 jwt:
   secret_key: lunchProjectSecretkeypleaserightworkingJwtprojectiwishyouplese
