@@ -2,9 +2,12 @@ package hello.lunchback.dietInfoManager.dto.response;
 
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class MenuItem {
 

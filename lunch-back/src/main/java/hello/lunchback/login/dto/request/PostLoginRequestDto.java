@@ -1,8 +1,11 @@
 package hello.lunchback.login.dto.request;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class PostLoginRequestDto {
 
     private String email;

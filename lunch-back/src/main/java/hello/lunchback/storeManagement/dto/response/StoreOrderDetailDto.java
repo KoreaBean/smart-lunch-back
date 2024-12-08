@@ -4,11 +4,14 @@ import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class StoreOrderDetailDto {
     private List<OrderDetailEntity> menuList = new ArrayList<>();
     private String orderDate;

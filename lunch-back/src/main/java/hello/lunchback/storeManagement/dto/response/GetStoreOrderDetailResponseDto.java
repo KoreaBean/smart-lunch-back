@@ -6,14 +6,17 @@ import hello.lunchback.common.response.ResponseMessage;
 import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.orderManagement.entity.OrderDetailEntity;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class GetStoreOrderDetailResponseDto extends ResponseDto {
 
     private List<OrderDetailEntity> menuList = new ArrayList<>();

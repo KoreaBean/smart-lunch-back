@@ -7,9 +7,7 @@ import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.storeManagement.entity.StoreEntity;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -19,7 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity(name = "order_entity")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class OrderEntity {
 

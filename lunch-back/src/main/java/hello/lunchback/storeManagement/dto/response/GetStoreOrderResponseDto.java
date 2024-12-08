@@ -3,16 +3,15 @@ package hello.lunchback.storeManagement.dto.response;
 import hello.lunchback.common.response.ResponseCode;
 import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.common.response.ResponseMessage;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class GetStoreOrderResponseDto extends ResponseDto {
     private List<OrderItem> orderItemList = new ArrayList<>();
 

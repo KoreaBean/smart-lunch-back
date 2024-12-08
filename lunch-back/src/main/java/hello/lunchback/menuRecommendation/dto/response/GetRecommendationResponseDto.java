@@ -5,13 +5,16 @@ import hello.lunchback.common.response.ResponseDto;
 import hello.lunchback.common.response.ResponseMessage;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class GetRecommendationResponseDto extends ResponseDto {
 
     private final List<MenuRecommendation> list = new ArrayList<>();

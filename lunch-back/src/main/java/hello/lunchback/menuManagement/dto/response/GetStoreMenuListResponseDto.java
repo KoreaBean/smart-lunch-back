@@ -7,12 +7,15 @@ import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class GetStoreMenuListResponseDto extends ResponseDto{
 
     public List<MenuEntity> list = new ArrayList<>();

@@ -6,16 +6,14 @@ import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.storeManagement.dto.request.PostStoreCreateRequestDto;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "store")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class StoreEntity {
 

@@ -5,12 +5,11 @@ import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.orderManagement.dto.request.MenuListItem;
 import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity(name = "order_detail")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class OrderDetailEntity {
 

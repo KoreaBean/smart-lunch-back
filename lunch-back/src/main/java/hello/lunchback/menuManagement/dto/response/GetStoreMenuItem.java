@@ -2,8 +2,12 @@ package hello.lunchback.menuManagement.dto.response;
 
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+
 public class GetStoreMenuItem {
 
     private Integer menuId;
