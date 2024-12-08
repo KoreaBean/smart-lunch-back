@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.97.Final:osx-aarch_64'
     implementation 'org.springframework:spring-messaging'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

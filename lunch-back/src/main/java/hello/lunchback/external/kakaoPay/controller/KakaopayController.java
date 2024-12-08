@@ -1,6 +1,7 @@
 package hello.lunchback.external.kakaoPay.controller;
 
 import hello.lunchback.external.kakaoPay.KakaoService;
+import hello.lunchback.external.kakaoPay.dto.response.KakaopayFailResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopaySuccessResponseDto;
 import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,4 +24,16 @@ public class KakaopayController {
 
        kakaoService.success(token , response);
     }
+
+    @GetMapping("/fail")
+    public void fail(@RequestBody KakaopayFailResponseDto dto){
+        kakaoService.fail(dto);
+    }
+    @GetMapping("/cancel")
+    public void cancel(){
+
+    }
+
+
+
 }

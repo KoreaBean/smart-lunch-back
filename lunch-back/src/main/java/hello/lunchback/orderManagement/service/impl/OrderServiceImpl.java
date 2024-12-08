@@ -124,9 +124,9 @@ public class OrderServiceImpl implements OrderService {
                 .quantity(quantity)
                 .total_amount(dto.getTotalPrice())
                 .tax_free_amount(0)
-                .approval_url("http://localhost:8080/kakaopay/payment/success")
-                .fail_url("http://localhost:8080/kakaopay/payment/fail")
-                .cancel_url("http://localhost:8080/kakaopay/payment/cancel")
+                .approval_url("http://172.30.1.91:8080/kakaopay/payment/success")
+                .fail_url("http://172.30.1.91:8080/kakaopay/payment/fail")
+                .cancel_url("http://172.30.1.91:8080/kakaopay/payment/cancel")
                 .build();
         return kakaopayRequestDto;
     }

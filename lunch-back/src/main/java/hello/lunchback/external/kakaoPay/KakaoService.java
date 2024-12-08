@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.lunchback.external.kakaoPay.dto.request.KakaopayRequestDto;
 import hello.lunchback.external.kakaoPay.dto.request.KakaopaySuccessRequestDto;
+import hello.lunchback.external.kakaoPay.dto.response.KakaopayFailResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopaySuccessResponseDto;
 import hello.lunchback.login.entity.MemberEntity;
@@ -18,6 +19,7 @@ import hello.lunchback.orderManagement.service.impl.OrderServiceImpl;
 import hello.lunchback.waitManagement.WaitingManager;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@Slf4j
 public class KakaoService {
 
     private final MemberRepository memberRepository;
@@ -107,12 +110,11 @@ public class KakaoService {
                 waitingManager.add(orderEntity.getStore().getStoreId(),orderEntity.getOrderId());
                 Long totalPrice = setTotalPrice(orderEntity);
                 sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice,orderEntity.getStatus());
-
+                response.sendRedirect("http://localhost:8080/order/history");
             }
         }catch (Exception e){
          e.printStackTrace();
      }
-        response.sendRedirect("http://localhost:8080/order/history");
     }
 
     private Long setTotalPrice(OrderEntity orderEntity) {
@@ -132,6 +134,10 @@ public class KakaoService {
 
         messagingTemplate.convertAndSend("/room/"+storeId,jsonMessage);
 
+    }
+
+    public void fail(KakaopayFailResponseDto dto) {
+        log.info("kakaopay Error : {}",dto);
     }
 
 //
