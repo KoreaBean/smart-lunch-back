@@ -110,7 +110,7 @@ public class KakaoService {
                 waitingManager.add(orderEntity.getStore().getStoreId(),orderEntity.getOrderId());
                 Long totalPrice = setTotalPrice(orderEntity);
                 sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice,orderEntity.getStatus());
-                response.sendRedirect("http://localhost:8080/order/history");
+                response.sendRedirect("http://172.30.1.91:8080/order/history");
             }
         }catch (Exception e){
          e.printStackTrace();
