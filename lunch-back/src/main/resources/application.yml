@@ -32,8 +32,8 @@ jwt:
 logging.level.web: DEBUG
 
 file:
-  filePath: test
-  fileUrl: test
+  filePath: /home/ec2-user/smart-lunch-back/lunch-back/src/main/java/hello/lunchback/file
+  fileUrl: http://13.124.200.54/image/
 
 kakaopay:
   client_id: 495991519813E5C75502
