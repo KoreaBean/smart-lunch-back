@@ -7,20 +7,14 @@ import hello.lunchback.external.kakaoPay.dto.request.KakaopaySuccessRequestDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayFailResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopaySuccessResponseDto;
-import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.orderManagement.dto.OrderStatus;
-import hello.lunchback.orderManagement.dto.request.PostOrderRequestDto;
 import hello.lunchback.orderManagement.dto.response.OrderNotificationDto;
-import hello.lunchback.orderManagement.dto.response.PostOrderResponseDto;
 import hello.lunchback.orderManagement.entity.OrderEntity;
 import hello.lunchback.orderManagement.repository.OrderRepository;
-import hello.lunchback.orderManagement.service.impl.OrderServiceImpl;
 import hello.lunchback.waitManagement.WaitingManager;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.*;
@@ -110,7 +103,7 @@ public class KakaoService {
                 waitingManager.add(orderEntity.getStore().getStoreId(),orderEntity.getOrderId());
                 Long totalPrice = setTotalPrice(orderEntity);
                 sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice,orderEntity.getStatus());
-                response.sendRedirect("http://172.30.1.91:8080/order/history");
+                //response.sendRedirect("http://1721.30.1.91:8080/order/history");
             }
         }catch (Exception e){
          e.printStackTrace();
