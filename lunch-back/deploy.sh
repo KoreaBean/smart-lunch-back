@@ -1,7 +1,7 @@
 
 # 설정
 EC2_USER="ec2-user"
-EC2_HOST="13.209.70.211"
+EC2_HOST="13.125.249.36"
 JAR_NAME="lunch-back-0.0.1-SNAPSHOT.jar"
 LOCAL_JAR_PATH="/Users/sanggyun/Documents/GitHub/smart-lunch-back/lunch-back/build/libs/$JAR_NAME"
 TARGET_DIR="/home/ec2-user/forder1/"

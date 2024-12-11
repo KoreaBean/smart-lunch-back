@@ -1,7 +1,10 @@
 package hello.lunchback.storeManagement.service.impl;
 
 import hello.lunchback.login.entity.MemberEntity;
+import hello.lunchback.login.entity.RoleEntity;
+import hello.lunchback.login.entity.RoleType;
 import hello.lunchback.login.repository.MemberRepository;
+import hello.lunchback.login.repository.RoleRepository;
 import hello.lunchback.menuManagement.entity.FileEntity;
 import hello.lunchback.menuManagement.entity.MenuEntity;
 import hello.lunchback.menuManagement.repository.FileRepository;
@@ -34,6 +37,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final WaitingManager waitingManager;
     private final FileRepository fileRepository;
+    private final RoleRepository roleRepository;
 
     @Value("${file.fileUrl}")
     private String fileUrl;
@@ -55,7 +59,8 @@ public class StoreServiceImpl implements StoreService {
             } else {
                 state = "매우 혼잡";
             }
-            StoreItem storeItem = new StoreItem(storeEntity,state);
+            String storeImg = fileUrl + storeEntity.getStoreImage();
+            StoreItem storeItem = new StoreItem(storeEntity,state,storeImg);
             list.add(storeItem);
         }
         return GetStoreResponseDto.success(list);
@@ -172,6 +177,8 @@ public class StoreServiceImpl implements StoreService {
                 return PostStoreCreateResponseDto.notExistedUser();
             }
             String uuidfilename = transImageName(dto);
+            RoleEntity byRoleName = roleRepository.findByRoleName(RoleType.restaurant.toString());
+            member.addRole(byRoleName);
             member.setStore(dto,uuidfilename);
 
         }catch (Exception e){

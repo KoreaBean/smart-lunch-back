@@ -33,7 +33,7 @@ logging.level.web: DEBUG
 
 file:
   filePath: /home/ec2-user/forder1/image/
-  fileUrl: http://13.209.70.211:8080/image/
+  fileUrl: http://13.125.249.36:8080/image/
 
 kakaopay:
   client_id: 495991519813E5C75502

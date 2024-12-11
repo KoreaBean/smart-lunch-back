@@ -14,11 +14,11 @@ public class StoreItem {
     private String state;
 
 
-    public StoreItem(StoreEntity storeEntity, String state) {
+    public StoreItem(StoreEntity storeEntity, String state, String storeImage) {
 
         this.storeId = storeEntity.getStoreId();
         this.storeName = storeEntity.getStoreName();
-        this.storeImage = storeEntity.getStoreImage();
+        this.storeImage = storeImage;
         this.state = state;
     }
 }

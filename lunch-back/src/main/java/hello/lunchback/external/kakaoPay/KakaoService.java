@@ -7,6 +7,7 @@ import hello.lunchback.external.kakaoPay.dto.request.KakaopaySuccessRequestDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayFailResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopayResponseDto;
 import hello.lunchback.external.kakaoPay.dto.response.KakaopaySuccessResponseDto;
+import hello.lunchback.login.entity.MemberEntity;
 import hello.lunchback.login.repository.MemberRepository;
 import hello.lunchback.orderManagement.dto.OrderStatus;
 import hello.lunchback.orderManagement.dto.response.OrderNotificationDto;
@@ -103,7 +104,6 @@ public class KakaoService {
                 waitingManager.add(orderEntity.getStore().getStoreId(),orderEntity.getOrderId());
                 Long totalPrice = setTotalPrice(orderEntity);
                 sendToStoreAlam(orderEntity.getOrderId(), orderEntity,totalPrice,orderEntity.getStatus());
-                //response.sendRedirect("http://1721.30.1.91:8080/order/history");
             }
         }catch (Exception e){
          e.printStackTrace();
@@ -123,9 +123,9 @@ public class KakaoService {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonMessage = objectMapper.writeValueAsString(orderNotificationDto);
 
-        Integer storeId = orderEntity.getStore().getStoreId();
+        Long memberId = orderEntity.getStore().getMember().getMemberId();
 
-        messagingTemplate.convertAndSend("/room/"+storeId,jsonMessage);
+        messagingTemplate.convertAndSend("/room/"+memberId,jsonMessage);
 
     }
 
